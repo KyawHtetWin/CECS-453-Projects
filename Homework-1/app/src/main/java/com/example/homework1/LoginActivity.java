@@ -22,6 +22,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null)
+            credentials = (HashMap<String, String>) bundle.getSerializable("credentials");
+
+        else {
+            credentials = new HashMap<>();
+            //Toast.makeText(LoginActivity.this, "bundle is null", Toast.LENGTH_SHORT).show();
+        }
+
         createComponenets();
     }
 
@@ -29,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     public void createComponenets() {
         usernameEditText = (EditText) findViewById(R.id.login_editText_username);
         passwordEditText = (EditText) findViewById(R.id.login_editText_password);
-        credentials = new HashMap();
+
     }
 
 
@@ -66,9 +76,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void signupButtonPressed(View v) {
+        Bundle bundle = new Bundle();
 
         Intent intent = new Intent(this, SignupActivity.class);
-        intent.putExtra("credentials", credentials);
+        bundle.putSerializable("credentials", credentials);
+        intent.putExtras(bundle);
+        //intent.putExtra("credentials", credentials);
         startActivity(intent);
     }
 

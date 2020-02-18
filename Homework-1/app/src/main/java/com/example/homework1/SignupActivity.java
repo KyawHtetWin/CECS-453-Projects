@@ -31,9 +31,17 @@ public class SignupActivity extends AppCompatActivity {
         emailEditText = (EditText) findViewById(R.id.signup_editText_email);
         phoneEditText = (EditText) findViewById(R.id.signup_editText_phone);
 
-        credentials = (HashMap) getIntent().getSerializableExtra("credentials");
-    }
+        //credentials = (HashMap<String, String>) getIntent().getSerializableExtra("credentials");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null)
+            credentials = (HashMap<String, String>) bundle.getSerializable("credentials");
 
+        else {
+            credentials = new HashMap<>();
+            Toast.makeText(this, "Bundle is null", Toast.LENGTH_SHORT).show();
+
+        }
+    }
 
 
     public void signMeUpButtonPressed(View v) {
@@ -77,8 +85,11 @@ public class SignupActivity extends AppCompatActivity {
                 credentials.put(username, password);
                 Toast.makeText(this, "Sign up successful", Toast.LENGTH_SHORT).show();
 
+                Bundle bundle = new Bundle();
                 Intent intent = new Intent(this, LoginActivity.class);
-                intent.putExtra("credentials", credentials);
+                bundle.putSerializable("credentials", credentials);
+                //intent.putExtra("credentials", credentials);
+                intent.putExtras(bundle);
                 startActivity(intent);
 
             } else {
@@ -87,12 +98,11 @@ public class SignupActivity extends AppCompatActivity {
 
         }
 
-
-
-
-
-
     }
+
+
+
+
 
     public void verifyForm() {
         // TODO: implement function
