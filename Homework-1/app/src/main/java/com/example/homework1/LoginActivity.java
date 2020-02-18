@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private HashMap<String, String> credentials;
+    public static HashMap<String, String> credentials;
     private EditText usernameEditText;
     private EditText passwordEditText;
 
@@ -23,8 +23,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         createComponenets();
-        credentials.put("ben", "password");
-
     }
 
 
@@ -40,15 +38,10 @@ public class LoginActivity extends AppCompatActivity {
 
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-
-
-        Log.i("Username", username);
-        Log.i("Password", password);
-
-
+        
         if (!username.isEmpty() && !password.isEmpty()) {
 
-            if (credentials.get(username).equals(password)) {
+            if (credentials.get(username) != null && credentials.get(username).equals(password)) {
 
                 Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
@@ -73,7 +66,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void signupButtonPressed(View v) {
-        Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+
+        Intent intent = new Intent(this, SignupActivity.class);
         intent.putExtra("credentials", credentials);
         startActivity(intent);
     }
