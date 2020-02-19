@@ -19,7 +19,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
         String username = getIntent().getStringExtra("username");
         username = titleCase(username);
-        String welcomeMessage = "Welcome, " + username + "!";
         TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
         welcomeTextView.setText("Welcome, " + username + "!");
 
