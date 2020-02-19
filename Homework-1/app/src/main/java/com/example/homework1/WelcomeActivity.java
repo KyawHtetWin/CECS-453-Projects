@@ -18,8 +18,22 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         String username = getIntent().getStringExtra("username");
+        username = titleCase(username);
+        String welcomeMessage = "Welcome, " + username + "!";
         TextView welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
         welcomeTextView.setText("Welcome, " + username + "!");
 
+    }
+
+    // This function simply returns a nicely titlecase formatted string
+    private static String titleCase(String string) {
+        String[] parts = string.split(" ");
+        StringBuilder stringBuilder = new StringBuilder(string.length());
+        for(String part: parts) {
+            char[] charArray = part.toLowerCase().toCharArray();
+            charArray[0] = Character.toUpperCase(charArray[0]);
+            stringBuilder.append(new String(charArray)).append(" ");
+        }
+        return stringBuilder.toString().trim();
     }
 }

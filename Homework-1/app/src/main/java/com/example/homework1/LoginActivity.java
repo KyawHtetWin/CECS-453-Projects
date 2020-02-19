@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     // TODO : fix NPE when login button pressed with empty username/password fields
     public void loginButtonPressed(View view) {
 
-        String username = usernameEditText.getText().toString();
+        String username = usernameEditText.getText().toString().toLowerCase();
         String password = passwordEditText.getText().toString();
         
         if (!username.isEmpty() && !password.isEmpty()) {

@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.text.TextWatcher;
 
 import java.util.HashMap;
 
@@ -27,7 +29,11 @@ public class SignupActivity extends AppCompatActivity {
 
         usernameEditText = (EditText) findViewById(R.id.signup_editText_username);
         passwordEditText = (EditText) findViewById(R.id.signup_editText_password);
+
+        // Add a TextWatcher
         retypePasswordEditText = (EditText) findViewById(R.id.signup_editText_retypePassword);
+        retypePasswordEditText.addTextChangedListener(watch);
+
         emailEditText = (EditText) findViewById(R.id.signup_editText_email);
         phoneEditText = (EditText) findViewById(R.id.signup_editText_phone);
 
@@ -43,9 +49,27 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
+    TextWatcher watch = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+            if(!passwordEditText.getText().toString().equals(retypePasswordEditText.getText().toString()))
+                retypePasswordEditText.setError("Password must match");
+        }
+    };
 
     public void signMeUpButtonPressed(View v) {
-        String username = usernameEditText.getText().toString();
+        String username = usernameEditText.getText().toString().toLowerCase();
         String password = passwordEditText.getText().toString();
         String retypePassword = retypePasswordEditText.getText().toString();
         String email = emailEditText.getText().toString();
@@ -78,8 +102,11 @@ public class SignupActivity extends AppCompatActivity {
             formNotEmpty = false;
         }
 
+        if(!password.equals(retypePassword)) {
+            Toast.makeText(this, "Sign up failed for unmatched password ", Toast.LENGTH_SHORT).show();
+        }
 
-        if (formNotEmpty) {
+        else if (formNotEmpty) {
 
             if (credentials.get(username) == null) {
                 credentials.put(username, password);
@@ -88,7 +115,6 @@ public class SignupActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 Intent intent = new Intent(this, LoginActivity.class);
                 bundle.putSerializable("credentials", credentials);
-                //intent.putExtra("credentials", credentials);
                 intent.putExtras(bundle);
                 startActivity(intent);
 
