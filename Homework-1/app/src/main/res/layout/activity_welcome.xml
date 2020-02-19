@@ -16,7 +16,7 @@
         android:layout_marginEnd="45dp"
         android:background="@drawable/edit_text_border"
         android:gravity="center"
-        android:text="Welcome!"
+        android:text="@string/welcome"
         android:typeface="serif"
         android:textStyle="italic"
         android:textAlignment="center"
