@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 
+
 public class LoginActivity extends AppCompatActivity {
 
     public static HashMap<String, String> credentials;
