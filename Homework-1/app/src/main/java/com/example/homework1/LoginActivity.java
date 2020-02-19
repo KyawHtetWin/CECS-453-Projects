@@ -13,17 +13,21 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static HashMap<String, String> credentials;
+    // This hashmap will stores the password for the corresponding username, which we can use
+    // to verify the user login
+    private HashMap<String, String> credentials;
     private EditText usernameEditText;
     private EditText passwordEditText;
 
+
+    // Do the set up of the login activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         Bundle bundle = getIntent().getExtras();
-
+        // Checks if there is any user's credentials is passed that can be used to login
         if (bundle != null)
             credentials = (HashMap<String, String>) bundle.getSerializable("credentials");
         else {
@@ -33,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText = (EditText) findViewById(R.id.login_editText_username);
         passwordEditText = (EditText) findViewById(R.id.login_editText_password);
 
+        // Sets up the listener on the username and password edit texts to check that
+        // username and password are filled in before the user presses login
         View.OnFocusChangeListener editTextListener = new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -42,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                     case R.id.login_editText_username:
 
                         String username = usernameEditText.getText().toString();
-
+                        // Notify users if the username is empty
                         if (!hasFocus) {
                             if (username.isEmpty()) {
                                 usernameEditText.setError("Username cannot be empty");
@@ -53,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                     case R.id.login_editText_password:
 
                         String password = passwordEditText.getText().toString();
-
+                        // Notify users if the password is empty
                         if (!hasFocus) {
                             if (password.isEmpty()) {
                                 passwordEditText.setError("Password cannot be empty");
@@ -64,12 +70,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
+        // Register the usernameEditText and passwordEditText as listener
         usernameEditText.setOnFocusChangeListener(editTextListener);
         passwordEditText.setOnFocusChangeListener(editTextListener);
 
     }
 
+    // This function gets called the when login button is pressed
     public void loginButtonPressed(View view) {
+
 
         if (usernameEditText.getError() == null && passwordEditText.getError() == null) {
 
@@ -77,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
             String password = passwordEditText.getText().toString();
 
             boolean fieldEmpty = false;
-
+            // Validate that the username and password fields are not empty
             if (username.isEmpty()) {
                 usernameEditText.setError("Username cannot be empty");
                 fieldEmpty = true;
@@ -88,10 +97,13 @@ public class LoginActivity extends AppCompatActivity {
                 fieldEmpty = true;
             }
 
+            // The user has entered username and login at this point
             if (!fieldEmpty) {
 
                 boolean validCredential = checkCredential(username, password);
 
+                // If the user exists in our credentials hashmap and is validated, login is successful,
+                // the user is taken to the welcome page that gives a welcome message with their name
                 if (validCredential) {
 
                     Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
@@ -99,7 +111,9 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra("username", username);
                     startActivity(intent);
 
-                } else {
+                }
+                // Inform the user that login failed
+                else {
                     passwordEditText.setText("");
                     Toast.makeText(LoginActivity.this, "Login failed: Invalid username or password!", Toast.LENGTH_SHORT).show();
                 }
@@ -111,6 +125,8 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    // This function gets called whenever the SignUp Button is pressed. Takes the user to the
+    // SignupActivity, while passing our credentials hashmap to check it's the new user
     public void signUpButtonPressed(View v) {
         Bundle bundle = new Bundle();
         Intent intent = new Intent(this, SignupActivity.class);
@@ -119,6 +135,8 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    // This function simply checks the credentials of the user by checking the password of the username
     public boolean checkCredential(String username, String password) {
 
         if (credentials.get(username) != null) {
