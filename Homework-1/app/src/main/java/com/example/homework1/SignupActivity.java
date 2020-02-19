@@ -1,3 +1,12 @@
+// CECS 453 Mobile Development
+// Homework 1
+// Due date: Feb 20, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
+
+
 package com.example.homework1;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +19,7 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
+
 
 public class SignupActivity extends AppCompatActivity {
 
