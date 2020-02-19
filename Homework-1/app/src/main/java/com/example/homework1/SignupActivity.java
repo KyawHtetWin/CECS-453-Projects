@@ -8,7 +8,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
+
+
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -17,7 +21,9 @@ public class SignupActivity extends AppCompatActivity {
     private EditText retypePasswordEditText;
     private EditText emailEditText;
     private EditText phoneEditText;
-    private HashMap<String,  String> credentials;
+    private HashMap<String, String> credentials;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,7 @@ public class SignupActivity extends AppCompatActivity {
             Toast.makeText(this, "Bundle is null", Toast.LENGTH_SHORT).show();
         }
 
+        
         View.OnFocusChangeListener editTextListener = new View.OnFocusChangeListener() {
 
             @Override
@@ -48,11 +55,15 @@ public class SignupActivity extends AppCompatActivity {
                 switch (v.getId()) {
 
                     case R.id.signup_editText_username:
+
                         String username = usernameEditText.getText().toString().toLowerCase();
 
                         if (!hasFocus) {
+
                             if (username.isEmpty()) {
                                 usernameEditText.setError("Username cannot be empty");
+                            } else if (!StringUtils.isAlphanumeric(username)) {
+                                usernameEditText.setError("Username must be alpha-numeric");
                             } else if (credentials.containsKey(username)) {
                                 usernameEditText.setError("Username already taken");
                             }
@@ -60,10 +71,12 @@ public class SignupActivity extends AppCompatActivity {
                         break;
 
                     case R.id.signup_editText_password:
+
                         String password = passwordEditText.getText().toString();
                         String retypePassword = retypePasswordEditText.getText().toString();
 
                         if (!hasFocus) {
+
                             if (password.isEmpty()) {
                                 passwordEditText.setError("Password cannot be empty");
                             } else if (!retypePassword.isEmpty() && !retypePassword.equals(password)) {
@@ -80,6 +93,7 @@ public class SignupActivity extends AppCompatActivity {
                         retypePassword = retypePasswordEditText.getText().toString();
 
                         if (!hasFocus) {
+
                             if (retypePassword.isEmpty()) {
                                 retypePasswordEditText.setError("Password cannot be empty");
                             } else if (!retypePassword.equals(password)) {
@@ -93,6 +107,7 @@ public class SignupActivity extends AppCompatActivity {
                         String email = emailEditText.getText().toString();
 
                         if (!hasFocus) {
+
                             if (emailEditText.getText().toString().isEmpty()) {
                                 emailEditText.setError("Email cannot be empty");
                             } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -105,6 +120,7 @@ public class SignupActivity extends AppCompatActivity {
                         String phoneNumber = phoneEditText.getText().toString();
 
                         if (!hasFocus) {
+
                             if (phoneEditText.getText().toString().isEmpty()) {
                                 phoneEditText.setError("Phone cannot be empty");
                             } else if (!android.util.Patterns.PHONE.matcher(phoneNumber).matches()) {
