@@ -23,7 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:entries="@array/makes"/>
+            />
 
         <Spinner
             android:id="@+id/car_model"
@@ -35,7 +35,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/car_make"
-            android:entries="@array/models"/>
+
+            />
 
         <ListView
             android:id="@+id/car_name"
