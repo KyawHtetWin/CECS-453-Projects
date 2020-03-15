@@ -116,14 +116,14 @@ public class CarListFragment extends Fragment {
         return v;
     }
 
-    private void updateUI() {
+    public void updateUI() {
         mCarAdapter = new CarAdapter();
         mCarRecyclerView.setAdapter(mCarAdapter);
     }
 
 
     // get vehicle makes from REST api and populate the makes spinner
-    private void getMakes() {
+    public void getMakes() {
 
         Call<List<Vehicle.Make>> call = mApiManager.getMakes();
         call.enqueue(new Callback<List<Vehicle.Make>>() {
@@ -164,7 +164,7 @@ public class CarListFragment extends Fragment {
     }
 
     // get vehicle models from REST api based on currently selected make, and populate the models spinner
-    private void getModels(int currentMakeId) {
+    public void getModels(int currentMakeId) {
 
         Call<List<Vehicle.Model>> call = mApiManager.getModels(currentMakeId);
         call.enqueue(new Callback<List<Vehicle.Model>>() {
@@ -209,7 +209,7 @@ public class CarListFragment extends Fragment {
     }
 
     // get listings of currently selected vehicle
-    private void getListings(int currentMakeId, int currentModelId) {
+    public void getListings(int currentMakeId, int currentModelId) {
 
         int zipCode = 92603; // irvine, ca
 
@@ -228,17 +228,7 @@ public class CarListFragment extends Fragment {
 
                 mVehicleListings = listResponse.getListings();
 
-                for (int i = 0; i < mVehicleListings.size(); i++) {
-
-                    for (int j = i+1; j < mVehicleListings.size(); j++) {
-
-                        String vin = mVehicleListings.get(i).getVin_number();
-                        if (mVehicleListings.get(j).getVin_number().equals(vin)) {
-                            mVehicleListings.remove(j);
-                            Log.i(TAG, "Removed a " + mVehicleListings.get(j).getModel() + " Vin: " + vin);
-                        }
-                    }
-                }
+                removeDuplicateListings();
 
                 updateUI();
             }
@@ -251,6 +241,24 @@ public class CarListFragment extends Fragment {
         });
 
     }
+
+    // remove duplicate vehicle listings
+    public void removeDuplicateListings() {
+
+        for (int i = 0; i < mVehicleListings.size(); i++) {
+            for (int j = i+1; j < mVehicleListings.size(); j++) {
+
+                String vin = mVehicleListings.get(i).getVin_number();
+                if (mVehicleListings.get(j).getVin_number().equals(vin)) {
+                    mVehicleListings.remove(j);
+                    Log.i(TAG, "Removed a " + mVehicleListings.get(j).getModel() + " Vin: " + vin);
+                }
+            }
+        }
+
+    }
+
+
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
