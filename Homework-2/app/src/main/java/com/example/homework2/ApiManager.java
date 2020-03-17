@@ -15,7 +15,7 @@ public interface ApiManager {
     Call<List<Vehicle.Model>> getModels(@Path("id") int makeId);
 
     @GET("cars/{make_id}/{model_id}/{zipcode}")
-    Call<Vehicle.ListResponse> getListings(@Path("make_id") int makeId,
+    Call<Vehicle.ListingResponse> getListings(@Path("make_id") int makeId,
                                           @Path("model_id") int modelId,
                                           @Path("zipcode") int zipcode);
 

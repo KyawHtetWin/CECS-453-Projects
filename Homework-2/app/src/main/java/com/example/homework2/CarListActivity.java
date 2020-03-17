@@ -14,6 +14,7 @@ public class CarListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreated()");
 
         setContentView(R.layout.activity_car_list);
 
@@ -26,7 +27,8 @@ public class CarListActivity extends AppCompatActivity {
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
-
-
     }
+
+
+
 }

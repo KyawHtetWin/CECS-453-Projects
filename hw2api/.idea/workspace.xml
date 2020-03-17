@@ -7,7 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="37e56c0c-d949-4d8c-ac34-f19999565efe" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Homework-2/app/src/main/java/com/example/homework2/CarListActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Homework-2/app/src/main/java/com/example/homework2/CarListActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Homework-2/app/src/main/java/com/example/homework2/CarListFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Homework-2/app/src/main/java/com/example/homework2/CarListFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Homework-2/app/src/main/res/layout/single_vehicle_preview.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Homework-2/app/src/main/res/layout/single_vehicle_preview.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Homework-2/app/src/main/res/layout/standard_spinner_format.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Homework-2/app/src/main/res/layout/standard_spinner_format.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,6 +35,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1Z9OpGzurC6arSpYhAOLeehrltG" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -122,7 +126,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

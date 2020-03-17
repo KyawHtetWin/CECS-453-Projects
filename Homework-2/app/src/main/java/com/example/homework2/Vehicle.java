@@ -34,7 +34,7 @@ public class Vehicle {
 
     }
 
-    static class List {
+    static class Listing {
         private String vehicle_make;
         private String model;
         private String image_url;
@@ -69,12 +69,12 @@ public class Vehicle {
         }
     }
 
-    static class ListResponse {
+    static class ListingResponse {
 
         @SerializedName("lists")
-        private ArrayList<Vehicle.List> listings;
+        private ArrayList<Vehicle.Listing> listings;
 
-        public ArrayList<List> getListings() {
+        public ArrayList<Listing> getListings() {
             return listings;
         }
     }

@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class CarListFragment extends Fragment {
 
     private HashMap<String, Integer> mVehicleMakes;
     private HashMap<String, Integer> mVehicleModels;
-    private ArrayList<Vehicle.List> mVehicleListings;
+    private ArrayList<Vehicle.Listing> mVehicleListings;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -213,28 +212,30 @@ public class CarListFragment extends Fragment {
 
         int zipCode = 92603; // irvine, ca
 
-        Call<Vehicle.ListResponse> call = mApiManager.getListings(currentMakeId, currentModelId, zipCode);
+        Call<Vehicle.ListingResponse> call = mApiManager.getListings(currentMakeId, currentModelId, zipCode);
 
-        call.enqueue(new Callback<Vehicle.ListResponse>() {
+        call.enqueue(new Callback<Vehicle.ListingResponse>() {
             @Override
-            public void onResponse(Call<Vehicle.ListResponse> call, Response<Vehicle.ListResponse> response) {
+            public void onResponse(Call<Vehicle.ListingResponse> call, Response<Vehicle.ListingResponse> response) {
 
                 if (!response.isSuccessful()) {
                     Toast.makeText(getActivity(), "Error in getListings()!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Vehicle.ListResponse listResponse = response.body();
+                Vehicle.ListingResponse listResponse = response.body();
 
                 mVehicleListings = listResponse.getListings();
 
-                removeDuplicateListings();
+                if (!mVehicleListings.isEmpty()) {
+                    removeDuplicateListings();
+                }
 
                 updateUI();
             }
 
             @Override
-            public void onFailure(Call<Vehicle.ListResponse> call, Throwable t) {
+            public void onFailure(Call<Vehicle.ListingResponse> call, Throwable t) {
                 Log.i(TAG, "onFailure() in getListings()" + t.toString());
             }
 
@@ -242,16 +243,18 @@ public class CarListFragment extends Fragment {
 
     }
 
-    // remove duplicate vehicle listings
+    // remove duplicate vehicle listings based on vin number
     public void removeDuplicateListings() {
 
         for (int i = 0; i < mVehicleListings.size(); i++) {
+            String vin = mVehicleListings.get(i).getVin_number();
+
             for (int j = i+1; j < mVehicleListings.size(); j++) {
 
-                String vin = mVehicleListings.get(i).getVin_number();
                 if (mVehicleListings.get(j).getVin_number().equals(vin)) {
                     mVehicleListings.remove(j);
-                    Log.i(TAG, "Removed a " + mVehicleListings.get(j).getModel() + " Vin: " + vin);
+                    j--;
+                    Log.i(TAG, "Removed " + mVehicleListings.get(i).getModel() + " Vin: " + vin);
                 }
             }
         }
@@ -322,8 +325,8 @@ public class CarListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(VehicleHolder holder, int position) {
-            Vehicle.List listing = mVehicleListings.get(position);
-            holder.bind(listing.getVehicle_make(), listing.getModel(), listing.getPrice(), listing.getDate().substring(0,16), listing.getImage_url());
+            Vehicle.Listing listing = mVehicleListings.get(position);
+            holder.bind(listing.getVehicle_make(), listing.getModel(), listing.getPrice(), listing.getDate().substring(5,16), listing.getImage_url());
         }
 
         @Override
