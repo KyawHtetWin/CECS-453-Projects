@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,23 +35,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CarListFragment extends Fragment {
 
     private RecyclerView mCarRecyclerView;
-    private CarAdapter mCarAdapter;
+    private VehicleAdapter mCarAdapter;
     private Spinner mCarMakeSpinner;
     private Spinner mCarModelSpinner;
     private Retrofit mRetroFit;
     private ApiManager mApiManager;
 
-
-    private static final String baseURL = "https://thawing-beach-68207.herokuapp.com/";
-    private static final String TAG = "DEBUG: Homework2";
-
     private HashMap<String, Integer> mVehicleMakes;
     private HashMap<String, Integer> mVehicleModels;
     private ArrayList<Vehicle.Listing> mVehicleListings;
 
+    private static final String baseURL = "https://thawing-beach-68207.herokuapp.com/";
+    private static final String TAG = "DEBUG: Homework2";
+
+
+    boolean isFinished = false;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         mRetroFit = new Retrofit.Builder()
                 .baseUrl(baseURL)
@@ -63,12 +67,13 @@ public class CarListFragment extends Fragment {
         mVehicleMakes = new HashMap<>();
         mVehicleModels = new HashMap<>();
         mVehicleListings = new ArrayList<>();
-
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+
         View v = inflater.inflate(R.layout.fragment_car_list, container, false);
 
         mCarRecyclerView = (RecyclerView) v.findViewById(R.id.car_recycler_view);
@@ -77,12 +82,17 @@ public class CarListFragment extends Fragment {
         mCarMakeSpinner = (Spinner) v.findViewById(R.id.car_make_spinner);
         mCarModelSpinner = (Spinner) v.findViewById(R.id.car_model_spinner);
 
+
         getMakes();
+
+
 
         // set listener for makes spinner
         mCarMakeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
                 String currentMake = mCarMakeSpinner.getSelectedItem().toString();
                 int currentMakeId = mVehicleMakes.get(currentMake);
                 getModels(currentMakeId);
@@ -97,6 +107,7 @@ public class CarListFragment extends Fragment {
         mCarModelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
                 String currentMake = mCarMakeSpinner.getSelectedItem().toString();
                 int currentMakeId = mVehicleMakes.get(currentMake);
 
@@ -111,14 +122,15 @@ public class CarListFragment extends Fragment {
             }
         });
 
-
         return v;
     }
 
     public void updateUI() {
-        mCarAdapter = new CarAdapter();
+        mCarAdapter = new VehicleAdapter();
         mCarRecyclerView.setAdapter(mCarAdapter);
     }
+
+
 
 
     // get vehicle makes from REST api and populate the makes spinner
@@ -130,20 +142,19 @@ public class CarListFragment extends Fragment {
             public void onResponse(Call<List<Vehicle.Make>> call, Response<List<Vehicle.Make>> response) {
 
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Error in getMakes()!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 List<Vehicle.Make> results = response.body();
-                List<String> carMakesSpinner = new ArrayList<>(); // list of makes for spinner
+                List<String> carMakes = new ArrayList<>(); // list of makes for spinner
 
                 for (Vehicle.Make make : results) {
-                    carMakesSpinner.add(make.getVehicle_make());
+                    carMakes.add(make.getVehicle_make());
                     mVehicleMakes.put(make.getVehicle_make(), make.getId());
                 }
 
                 // setting up makes spinner
-                ArrayAdapter<String> carMakeAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carMakesSpinner);
+                ArrayAdapter<String> carMakeAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carMakes);
                 carMakeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mCarMakeSpinner.setAdapter(carMakeAdapter);
 
@@ -151,14 +162,24 @@ public class CarListFragment extends Fragment {
                 String currentMake = mCarMakeSpinner.getSelectedItem().toString();
                 int currentMakeId = mVehicleMakes.get(currentMake);
                 getModels(currentMakeId);
+
             }
 
             @Override
             public void onFailure(Call<List<Vehicle.Make>> call, Throwable t) {
                 Log.i(TAG, "onFailure() in getMakes()");
+                isFinished = true;
+
             }
 
         });
+
+
+
+
+
+
+
 
     }
 
@@ -171,29 +192,28 @@ public class CarListFragment extends Fragment {
             public void onResponse(Call<List<Vehicle.Model>> call, Response<List<Vehicle.Model>> response) {
 
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Error in getModels()!", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Response not successful in getModels()!");
                     return;
                 }
 
                 List<Vehicle.Model> results = response.body();
-                List<String> carModelsSpinner = new ArrayList<>(); // list of models for spinner
+                List<String> carModels = new ArrayList<>(); // list of models for spinner
 
                 for (Vehicle.Model model : results) {
-                    carModelsSpinner.add(model.getModel());
+                    carModels.add(model.getModel());
                     mVehicleModels.put(model.getModel(), model.getId());
                 }
 
                 // setting up models spinner
-                ArrayAdapter<String> carModelAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carModelsSpinner);
+                ArrayAdapter<String> carModelAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carModels);
                 carModelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mCarModelSpinner.setAdapter(carModelAdapter);
 
+                // set up for getListings() call
                 String currentMake = mCarMakeSpinner.getSelectedItem().toString();
                 int currentMakeId = mVehicleMakes.get(currentMake);
-
                 String currentModel = mCarModelSpinner.getSelectedItem().toString();
                 int currentModelId = mVehicleModels.get(currentModel);
-
                 getListings(currentMakeId, currentModelId);
 
             }
@@ -213,13 +233,13 @@ public class CarListFragment extends Fragment {
         int zipCode = 92603; // irvine, ca
 
         Call<Vehicle.ListingResponse> call = mApiManager.getListings(currentMakeId, currentModelId, zipCode);
-
         call.enqueue(new Callback<Vehicle.ListingResponse>() {
             @Override
             public void onResponse(Call<Vehicle.ListingResponse> call, Response<Vehicle.ListingResponse> response) {
 
+
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Error in getListings()!", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Response not successful in getListings()!");
                     return;
                 }
 
@@ -261,12 +281,9 @@ public class CarListFragment extends Fragment {
 
     }
 
-
-
-
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // view holder for the recyclerview adapter
+    // view holder for the RecyclerView adapter
     private class VehicleHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mMakeModelTextView;
@@ -288,7 +305,9 @@ public class CarListFragment extends Fragment {
 
             mMakeModelTextView.setText(make + " " + model);
             mDateTextView.setText(date);
-            mPriceTextView.setText("$" + Double.toString(price));
+
+            NumberFormat dollar = NumberFormat.getCurrencyInstance();
+            mPriceTextView.setText(dollar.format(price));
 
             if (imageURL.isEmpty()) {
                 Picasso.get().load(R.drawable.image_coming_soon).into(mThumbnailImageView);
@@ -302,19 +321,18 @@ public class CarListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(getActivity(),
-                    "Image clicked!", Toast.LENGTH_SHORT).show();
+            int listingPosition = mCarRecyclerView.getChildLayoutPosition(view);
+            Vehicle.Listing listing = mVehicleListings.get(listingPosition);
+
+            ((MainActivity) getActivity()).replaceFragments(listing);
         }
 
 
     }
 
-    // adapter for recycleview
-    private class CarAdapter extends RecyclerView.Adapter<VehicleHolder> {
+    // adapter for RecyclerView
+    private class VehicleAdapter extends RecyclerView.Adapter<VehicleHolder> {
 
-
-        public CarAdapter() {
-        }
 
         @Override
         public VehicleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -336,6 +354,9 @@ public class CarListFragment extends Fragment {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 }

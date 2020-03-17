@@ -2,6 +2,7 @@ package com.example.homework2;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Vehicle {
@@ -34,18 +35,29 @@ public class Vehicle {
 
     }
 
-    static class Listing {
+    static class Listing implements Serializable{
         private String vehicle_make;
         private String model;
         private String image_url;
         private String vin_number;
+        private String veh_description;
+
         private double price;
+        private int mileage;
 
         private String created_at;
 
 
         public String getVehicle_make() {
             return vehicle_make;
+        }
+
+        public String getVeh_description() {
+            return veh_description;
+        }
+
+        public int getMileage() {
+            return mileage;
         }
 
         public String getModel() {
