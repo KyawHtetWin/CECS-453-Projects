@@ -51,18 +51,10 @@ public class CarListFragment extends Fragment {
 
     boolean isFinished = false;
 
-    static interface Listener{
-      void carSelected(Vehicle.Listing vehicle_listing);
-    };
+    interface Listener{
+      void carSelected(Vehicle.Listing vehicle_listing); };
 
     private Listener listener;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.listener = (Listener) context;
-    }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,13 +125,17 @@ public class CarListFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.listener = (Listener) context;
+    }
+
+
     public void updateUI() {
         mCarAdapter = new VehicleAdapter();
         mCarRecyclerView.setAdapter(mCarAdapter);
     }
-
-
-
 
     // get vehicle makes from REST api and populate the makes spinner
     public void getMakes() {
@@ -291,6 +287,7 @@ public class CarListFragment extends Fragment {
         private TextView mPriceTextView;
         private ImageView mThumbnailImageView;
 
+        // Specifies what view that VehicleHolder should use & set the view with their related view id
         public VehicleHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.single_vehicle_preview, parent, false));
             itemView.setOnClickListener(this);
@@ -301,6 +298,7 @@ public class CarListFragment extends Fragment {
             mThumbnailImageView = (ImageView) itemView.findViewById(R.id.vehicle_thumbnail_image_view);
         }
 
+        // Bind the relevant information about the vehicle to display in each view holder
         public void bind(String make, String model, double price, String date, String imageURL) {
 
             mMakeModelTextView.setText(make + " " + model);
@@ -319,12 +317,13 @@ public class CarListFragment extends Fragment {
             }
         }
 
+        // Whenever the user clicks on one of the view holder, the relevant details of the
+        // vehicle based on their click is passed through the listener interface
         @Override
         public void onClick(View view) {
             int listingPosition = mCarRecyclerView.getChildLayoutPosition(view);
             Vehicle.Listing listing = mVehicleListings.get(listingPosition);
 
-            //((MainActivity) getActivity()).replaceFragments(listing);
             if(listener != null)
                 listener.carSelected(listing);
         }
@@ -335,20 +334,22 @@ public class CarListFragment extends Fragment {
     // adapter for RecyclerView
     private class VehicleAdapter extends RecyclerView.Adapter<VehicleHolder> {
 
-
+        // Tell the adapter how to construct the ViewHolder
         @Override
         public VehicleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-
             return new VehicleHolder(layoutInflater, parent);
         }
 
+        // This tells the RecyclerView when it wants to use (or reuse)
+        // a view holder for a new piece of data
         @Override
         public void onBindViewHolder(VehicleHolder holder, int position) {
             Vehicle.Listing listing = mVehicleListings.get(position);
             holder.bind(listing.getVehicle_make(), listing.getModel(), listing.getPrice(), listing.getDate().substring(5,16), listing.getImage_url());
         }
 
+        // Tells the adapter how many data items there are
         @Override
         public int getItemCount() {
             return mVehicleListings.size();

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Vehicle {
 
-
+    // Vehicle has make
     static class Make {
         private String vehicle_make;
         private int id;
@@ -21,6 +21,7 @@ public class Vehicle {
         }
     }
 
+    // Vehicle has model
     static class Model {
         private int id;
         private String model;
@@ -35,6 +36,7 @@ public class Vehicle {
 
     }
 
+    // The Listing of a particular Vehicle information
     static class Listing implements Serializable{
         private String vehicle_make;
         private String model;
@@ -81,6 +83,7 @@ public class Vehicle {
         }
     }
 
+    // Will save the api return with an array of vehicle listing
     static class ListingResponse {
 
         @SerializedName("lists")
