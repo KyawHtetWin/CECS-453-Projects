@@ -51,11 +51,13 @@ public class CarListFragment extends Fragment {
 
     boolean isFinished = false;
 
+    // Interface that is used to communicate with CarDetailFragment
     interface Listener{
       void carSelected(Vehicle.Listing vehicle_listing); };
 
     private Listener listener;
 
+    // Simple initialization of the objects
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +74,7 @@ public class CarListFragment extends Fragment {
         mVehicleListings = new ArrayList<>();
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,12 +82,14 @@ public class CarListFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_car_list, container, false);
 
+        // Initialize the RecyclerView and sets the LinearLayout for it
         mCarRecyclerView = (RecyclerView) v.findViewById(R.id.car_recycler_view);
         mCarRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mCarMakeSpinner = (Spinner) v.findViewById(R.id.car_make_spinner);
         mCarModelSpinner = (Spinner) v.findViewById(R.id.car_model_spinner);
 
+        // API Call to get car makes
         getMakes();
 
         // set listener for makes spinner
@@ -95,6 +100,7 @@ public class CarListFragment extends Fragment {
 
                 String currentMake = mCarMakeSpinner.getSelectedItem().toString();
                 int currentMakeId = mVehicleMakes.get(currentMake);
+                // Once Car Make is selected, make API Call to get car models
                 getModels(currentMakeId);
             }
 
