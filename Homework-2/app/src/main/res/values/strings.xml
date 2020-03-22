@@ -1,3 +1,21 @@
 <resources>
+<<<<<<< HEAD
     <string name="app_name">Homework2</string>
+=======
+    <string name="app_name">homework2</string>
+
+    <string-array name="makes">
+        <item>BMake</item>
+        <item>FMake</item>
+        <item>LMake</item>
+    </string-array>
+
+    <string-array name="models">
+        <item>B999</item>
+        <item>F777</item>
+        <item>L007</item>
+    </string-array>
+
+
+>>>>>>> master
 </resources>

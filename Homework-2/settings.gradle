@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 rootProject.name='Homework2'
 include ':app'
+=======
+include ':app'
+rootProject.name='homework2'
+>>>>>>> master

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Homework2</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="login">Login</string>
+    <string name="retype_password">Retype password</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="sign_me_up">Sign me up!</string>
+    <string name="welcome">Welcome!</string>
+</resources>
