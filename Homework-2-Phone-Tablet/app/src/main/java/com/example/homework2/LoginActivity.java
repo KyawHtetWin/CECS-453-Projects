@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,6 +23,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Log.i("DEBUG: ", "onCreate() in LogInActivity");
+
 
         usernameEditText = (EditText) findViewById(R.id.login_editText_username);
         passwordEditText = (EditText) findViewById(R.id.login_editText_password);
@@ -64,6 +68,14 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText.setOnFocusChangeListener(editTextListener);
 
     }
+
+    // clear password editText field on back button pressed
+    @Override
+    protected void onStart() {
+        super.onStart();
+        passwordEditText.setText("");
+    }
+
 
     // This function gets called the when login button is pressed
     public void loginButtonPressed(View view) {

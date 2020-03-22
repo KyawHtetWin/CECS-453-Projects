@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Vehicle {
 
@@ -92,6 +94,34 @@ public class Vehicle {
         public ArrayList<Listing> getListings() {
             return listings;
         }
+    }
+
+    // extract vehicle year from vehicle description
+    public static String getYear(String text) {
+        String year = "";
+
+        Pattern pattern = Pattern.compile("[1][9][0-9]{2}|[2][0][0|1|2][0-9]");
+        Matcher matcher = pattern.matcher(text);
+
+        if (matcher.find()) {
+            year = matcher.group();
+        }
+
+        return year;
+    }
+
+    // extract location from vehicle description
+    public static String getLocation(String text) {
+        String location = "";
+
+        Pattern pattern = Pattern.compile("([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})");
+        Matcher matcher = pattern.matcher(text);
+
+        if (matcher.find()) {
+            location = matcher.group();
+        }
+
+        return location;
     }
 
 }

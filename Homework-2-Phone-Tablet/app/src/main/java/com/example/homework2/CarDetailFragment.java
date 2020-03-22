@@ -2,6 +2,7 @@ package com.example.homework2;
 
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.squareup.picasso.Picasso;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CarDetailFragment extends Fragment {
 
@@ -25,6 +28,7 @@ public class CarDetailFragment extends Fragment {
     private TextView mPriceTextView;
     private TextView mVehicleDescriptionTextView;
     private TextView mDateTextView;
+    private TextView mLocationTextView;
     private ImageView mVehicleImageView;
 
     private Vehicle.Listing mSelectedListing;
@@ -49,7 +53,7 @@ public class CarDetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState != null)
+        if (savedInstanceState != null)
             mSelectedListing = (Vehicle.Listing) savedInstanceState.getSerializable("vehicle_listing");
     }
 
@@ -66,20 +70,28 @@ public class CarDetailFragment extends Fragment {
         super.onStart();
 
         View view = getView();
-        if(view != null) {
+        if (view != null) {
             mMakeModelTextView = (TextView) view.findViewById(R.id.make_model_text_view);
             mPriceTextView = (TextView) view.findViewById(R.id.price_text_view);
             mVehicleDescriptionTextView = (TextView) view.findViewById(R.id.vehicle_description_text_view);
             mDateTextView = (TextView) view.findViewById(R.id.date_text_view);
+            mLocationTextView = (TextView) view.findViewById(R.id.locationTextView);
             mVehicleImageView = (ImageView) view.findViewById(R.id.vehicle_image_view);
 
-            mMakeModelTextView.setText(mSelectedListing.getVehicle_make() + " " + mSelectedListing.getModel());
+            String year = Vehicle.getYear(mSelectedListing.getVeh_description());
+            String location = Vehicle.getLocation(mSelectedListing.getVeh_description());
+            String vehicleDescription = mSelectedListing.getVeh_description()
+                    .replace("Location: " + location + ". ", "");
+
+            mMakeModelTextView.setText(year + " " + mSelectedListing.getVehicle_make() + " " + mSelectedListing.getModel());
+            mLocationTextView.setText(location);
 
             NumberFormat dollar = NumberFormat.getCurrencyInstance();
             mPriceTextView.setText(dollar.format(mSelectedListing.getPrice()));
 
-            mVehicleDescriptionTextView.setText(mSelectedListing.getVeh_description());
-            mDateTextView.setText(mSelectedListing.getDate().substring(5,16));
+            mVehicleDescriptionTextView.setText(vehicleDescription);
+            mDateTextView.setText(mSelectedListing.getDate().substring(5, 16));
+
 
             if (mSelectedListing.getImage_url().isEmpty()) {
                 Picasso.get().load(R.drawable.image_coming_soon).into(mVehicleImageView);
@@ -92,6 +104,9 @@ public class CarDetailFragment extends Fragment {
         }
     }
 
-    public void setmSelectedListing(Vehicle.Listing mSelectedListing) { this.mSelectedListing = mSelectedListing; }
+    public void setmSelectedListing(Vehicle.Listing mSelectedListing) {
+        this.mSelectedListing = mSelectedListing;
+    }
+
 
 }

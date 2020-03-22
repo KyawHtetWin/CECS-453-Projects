@@ -25,6 +25,8 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -291,6 +293,7 @@ public class CarListFragment extends Fragment {
         private TextView mMakeModelTextView;
         private TextView mDateTextView;
         private TextView mPriceTextView;
+        private TextView mLocationTextView;
         private ImageView mThumbnailImageView;
 
         // Specifies what view that VehicleHolder should use & set the view with their related view id
@@ -301,14 +304,16 @@ public class CarListFragment extends Fragment {
             mMakeModelTextView = (TextView) itemView.findViewById(R.id.make_model_text_view);
             mDateTextView = (TextView) itemView.findViewById(R.id.date_text_view);
             mPriceTextView = (TextView) itemView.findViewById(R.id.price_text_view);
+            mLocationTextView = (TextView) itemView.findViewById(R.id.locationTextView);
             mThumbnailImageView = (ImageView) itemView.findViewById(R.id.vehicle_thumbnail_image_view);
         }
 
         // Bind the relevant information about the vehicle to display in each view holder
-        public void bind(String make, String model, double price, String date, String imageURL) {
+        public void bind(String year, String make, String model, double price, String date, String location, String imageURL) {
 
-            mMakeModelTextView.setText(make + " " + model);
+            mMakeModelTextView.setText(year + " " + make + " " + model);
             mDateTextView.setText(date);
+            mLocationTextView.setText(location);
 
             NumberFormat dollar = NumberFormat.getCurrencyInstance();
             mPriceTextView.setText(dollar.format(price));
@@ -352,7 +357,10 @@ public class CarListFragment extends Fragment {
         @Override
         public void onBindViewHolder(VehicleHolder holder, int position) {
             Vehicle.Listing listing = mVehicleListings.get(position);
-            holder.bind(listing.getVehicle_make(), listing.getModel(), listing.getPrice(), listing.getDate().substring(5,16), listing.getImage_url());
+
+            holder.bind(Vehicle.getYear(listing.getVeh_description()), listing.getVehicle_make(),
+                    listing.getModel(), listing.getPrice(), listing.getDate().substring(5,16),
+                   Vehicle.getLocation(listing.getVeh_description()), listing.getImage_url());
         }
 
         // Tells the adapter how many data items there are
@@ -363,8 +371,6 @@ public class CarListFragment extends Fragment {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 
 
