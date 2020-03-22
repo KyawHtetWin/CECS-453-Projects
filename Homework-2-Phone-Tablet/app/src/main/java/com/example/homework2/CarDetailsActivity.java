@@ -1,13 +1,8 @@
 package com.example.homework2;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-
-import android.os.Bundle;
-
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class CarDetailsActivity extends AppCompatActivity {
     public static final String ARG_VEHICLE_LISTING = "vehicle_listing";

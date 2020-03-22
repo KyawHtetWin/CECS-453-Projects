@@ -1,8 +1,6 @@
 package com.example.homework2;
 
-import android.media.Image;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.squareup.picasso.Picasso;
-
-import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CarDetailFragment extends Fragment {
 
