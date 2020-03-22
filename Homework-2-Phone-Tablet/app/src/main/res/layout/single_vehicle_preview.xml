@@ -27,6 +27,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:text="Make Model"
+        android:textColor="@android:color/black"
         app:layout_constraintStart_toEndOf="@+id/vehicle_thumbnail_image_view"
         app:layout_constraintTop_toTopOf="@+id/vehicle_thumbnail_image_view" />
 
