@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,7 +53,7 @@ public class CarListFragment extends Fragment {
 
     boolean isFinished = false;
 
-    // Interface that is used to communicate with CarDetailFragment
+    // Interface that Activity and Fragment can implement to communicate with
     interface Listener{
       void carSelected(Vehicle.Listing vehicle_listing); };
 
@@ -73,6 +75,7 @@ public class CarListFragment extends Fragment {
         mVehicleModels = new HashMap<>();
         mVehicleListings = new ArrayList<>();
     }
+
 
 
     @Nullable
@@ -141,6 +144,20 @@ public class CarListFragment extends Fragment {
     public void updateUI() {
         mCarAdapter = new VehicleAdapter();
         mCarRecyclerView.setAdapter(mCarAdapter);
+
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (mVehicleListings.size() > 0) {
+            CarDetailFragment carDetailFragment =  new CarDetailFragment();
+            carDetailFragment.setmSelectedListing(mVehicleListings.get(0));
+            ft.replace(R.id.fragment_container, carDetailFragment);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.addToBackStack(null);
+            ft.commit();
+        } else {
+            Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+            ft.remove(fragment).commit();
+        }
     }
 
     // get vehicle makes from REST api and populate the makes spinner
@@ -238,7 +255,6 @@ public class CarListFragment extends Fragment {
         call.enqueue(new Callback<Vehicle.ListingResponse>() {
             @Override
             public void onResponse(Call<Vehicle.ListingResponse> call, Response<Vehicle.ListingResponse> response) {
-
 
                 if (!response.isSuccessful()) {
                     Log.i(TAG, "Response not successful in getListings()!");

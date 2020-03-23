@@ -29,22 +29,6 @@ public class CarDetailFragment extends Fragment {
 
     private Vehicle.Listing mSelectedListing;
 
-    /*
-    public static CarDetailFragment newInstance(Vehicle.Listing vehicleListing) {
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_VEHICLE_LISTING, vehicleListing);
-        CarDetailFragment fragment = new CarDetailFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-     */
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("vehicle_listing", mSelectedListing);
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +75,13 @@ public class CarDetailFragment extends Fragment {
             }
         }
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("vehicle_listing", mSelectedListing);
+    }
+
 
     public void setmSelectedListing(Vehicle.Listing mSelectedListing) { this.mSelectedListing = mSelectedListing; }
 
