@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -180,6 +182,19 @@ public class CarListFragment extends Fragment {
     public void updateUI() {
         mCarAdapter = new VehicleAdapter();
         mCarRecyclerView.setAdapter(mCarAdapter);
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (mVehicleListings.size() > 0) {
+            CarDetailFragment carDetailFragment =  new CarDetailFragment();
+            carDetailFragment.setmSelectedListing(mVehicleListings.get(0));
+            ft.replace(R.id.fragment_container, carDetailFragment);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.addToBackStack(null);
+            ft.commit();
+        } else {
+            Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+            ft.remove(fragment).commit();
+        }
     }
 
     // get vehicle makes from REST api and populate the makes spinner
