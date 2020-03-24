@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,12 +44,22 @@ public class CarListFragment extends Fragment {
     private Retrofit mRetroFit;
     private ApiManager mApiManager;
 
-    private HashMap<String, Integer> mVehicleMakes;
-    private HashMap<String, Integer> mVehicleModels;
-    private ArrayList<Vehicle.Listing> mVehicleListings;
+    private HashMap<String, Integer> mVehicleMakes = null;
+    private HashMap<String, Integer> mVehicleModels = null;
+    private ArrayList<Vehicle.Listing> mVehicleListings = null;
 
     private static final String baseURL = "https://thawing-beach-68207.herokuapp.com/";
     private static final String TAG = "DEBUG: Homework2";
+
+    // This is the ArrayAdapter to carMakeSpinner
+    private ArrayAdapter<String> carMakeAdapter = null;
+    // This is the Array List that will store all the car makes
+    private List<String> carMakes = null;
+
+    // This is the ArrayAdapter to carModelSpinner
+    private ArrayAdapter<String> carModelAdapter = null;
+    // This the ArrayList that will store all the car models
+    private List<String> carModels = null;
 
     boolean isFinished = false;
 
@@ -56,6 +68,15 @@ public class CarListFragment extends Fragment {
       void carSelected(Vehicle.Listing vehicle_listing); };
 
     private Listener listener;
+
+    // This method saved the relevant data so that the app data is preserved on the screen rotation
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("car_makes", (Serializable) carMakes);
+        outState.putSerializable("car_models", (Serializable) carModels);
+        outState.putSerializable("vehicle_listing", mVehicleListings);
+    }
 
     // Simple initialization of the objects
     @Override
@@ -72,8 +93,23 @@ public class CarListFragment extends Fragment {
         mVehicleMakes = new HashMap<>();
         mVehicleModels = new HashMap<>();
         mVehicleListings = new ArrayList<>();
-    }
+        /*
+        if(savedInstanceState != null) {
+            carMakes = (List<String>) savedInstanceState.getSerializable("car_makes");
+            carModels = (List<String>) savedInstanceState.getSerializable("car_models");
 
+            //mVehicleModels = (HashMap<String, Integer>) savedInstanceState.getSerializable("vehcile_model");
+            mVehicleListings = (ArrayList<Vehicle.Listing>) savedInstanceState.getSerializable("vehcile_listing");
+            Toast.makeText(getContext(), "SavedInstanceState", Toast.LENGTH_SHORT).show();
+        }
+
+        else {
+
+            mVehicleListings = new ArrayList<>();
+        }
+
+         */
+    }
 
     @Nullable
     @Override
@@ -88,6 +124,7 @@ public class CarListFragment extends Fragment {
 
         mCarMakeSpinner = (Spinner) v.findViewById(R.id.car_make_spinner);
         mCarModelSpinner = (Spinner) v.findViewById(R.id.car_model_spinner);
+
 
         // API Call to get car makes
         getMakes();
@@ -131,6 +168,8 @@ public class CarListFragment extends Fragment {
         return v;
     }
 
+
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -146,86 +185,109 @@ public class CarListFragment extends Fragment {
     // get vehicle makes from REST api and populate the makes spinner
     public void getMakes() {
 
-        Call<List<Vehicle.Make>> call = mApiManager.getMakes();
-        call.enqueue(new Callback<List<Vehicle.Make>>() {
-            @Override
-            public void onResponse(Call<List<Vehicle.Make>> call, Response<List<Vehicle.Make>> response) {
+        //if (carMakes == null) {
+            Call<List<Vehicle.Make>> call = mApiManager.getMakes();
+            call.enqueue(new Callback<List<Vehicle.Make>>() {
+                @Override
+                public void onResponse(Call<List<Vehicle.Make>> call, Response<List<Vehicle.Make>> response) {
 
-                if (!response.isSuccessful()) {
-                    return;
+                    if (!response.isSuccessful()) {
+                        return;
+                    }
+
+                    List<Vehicle.Make> results = response.body();
+                    carMakes = new ArrayList<>(); // list of makes for spinner
+
+                    for (Vehicle.Make make : results) {
+                        carMakes.add(make.getVehicle_make());
+                        mVehicleMakes.put(make.getVehicle_make(), make.getId());
+                    }
+
+                    // setting up makes spinner
+                    carMakeAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carMakes);
+                    carMakeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    mCarMakeSpinner.setAdapter(carMakeAdapter);
+
+                    // set up for getModels() call
+                    String currentMake = mCarMakeSpinner.getSelectedItem().toString();
+                    int currentMakeId = mVehicleMakes.get(currentMake);
+                    getModels(currentMakeId);
+
                 }
 
-                List<Vehicle.Make> results = response.body();
-                List<String> carMakes = new ArrayList<>(); // list of makes for spinner
+                @Override
+                public void onFailure(Call<List<Vehicle.Make>> call, Throwable t) {
+                    Log.i(TAG, "onFailure() in getMakes()");
+                    isFinished = true;
 
-                for (Vehicle.Make make : results) {
-                    carMakes.add(make.getVehicle_make());
-                    mVehicleMakes.put(make.getVehicle_make(), make.getId());
                 }
 
-                // setting up makes spinner
-                ArrayAdapter<String> carMakeAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carMakes);
-                carMakeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                mCarMakeSpinner.setAdapter(carMakeAdapter);
+            });
+        //}
 
-                // set up for getModels() call
-                String currentMake = mCarMakeSpinner.getSelectedItem().toString();
-                int currentMakeId = mVehicleMakes.get(currentMake);
-                getModels(currentMakeId);
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Vehicle.Make>> call, Throwable t) {
-                Log.i(TAG, "onFailure() in getMakes()");
-                isFinished = true;
-
-            }
-
-        });
+        /*
+        else {
+            carMakeAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carMakes);
+            carMakeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            mCarMakeSpinner.setAdapter(carMakeAdapter);
+        }
+        */
     }
 
     // get vehicle models from REST api based on currently selected make, and populate the models spinner
     public void getModels(int currentMakeId) {
 
-        Call<List<Vehicle.Model>> call = mApiManager.getModels(currentMakeId);
-        call.enqueue(new Callback<List<Vehicle.Model>>() {
-            @Override
-            public void onResponse(Call<List<Vehicle.Model>> call, Response<List<Vehicle.Model>> response) {
+        //if(carModels == null) {
+            Call<List<Vehicle.Model>> call = mApiManager.getModels(currentMakeId);
+            call.enqueue(new Callback<List<Vehicle.Model>>() {
+                @Override
+                public void onResponse(Call<List<Vehicle.Model>> call, Response<List<Vehicle.Model>> response) {
 
-                if (!response.isSuccessful()) {
-                    Log.i(TAG, "Response not successful in getModels()!");
-                    return;
+                    if (!response.isSuccessful()) {
+                        Log.i(TAG, "Response not successful in getModels()!");
+                        return;
+                    }
+
+                    List<Vehicle.Model> results = response.body();
+                    carModels = new ArrayList<>(); // list of models for spinner
+
+                    for (Vehicle.Model model : results) {
+                        carModels.add(model.getModel());
+                        mVehicleModels.put(model.getModel(), model.getId());
+                    }
+
+                    // setting up models spinner
+                    carModelAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carModels);
+                    carModelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    mCarModelSpinner.setAdapter(carModelAdapter);
+
+                    // set up for getListings() call
+                    String currentMake = mCarMakeSpinner.getSelectedItem().toString();
+                    int currentMakeId = mVehicleMakes.get(currentMake);
+                    String currentModel = mCarModelSpinner.getSelectedItem().toString();
+                    int currentModelId = mVehicleModels.get(currentModel);
+                    getListings(currentMakeId, currentModelId);
+
                 }
 
-                List<Vehicle.Model> results = response.body();
-                List<String> carModels = new ArrayList<>(); // list of models for spinner
-
-                for (Vehicle.Model model : results) {
-                    carModels.add(model.getModel());
-                    mVehicleModels.put(model.getModel(), model.getId());
+                @Override
+                public void onFailure(Call<List<Vehicle.Model>> call, Throwable t) {
+                    Log.i(TAG, "onFailure() in getModels()");
                 }
 
-                // setting up models spinner
-                ArrayAdapter<String> carModelAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carModels);
-                carModelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                mCarModelSpinner.setAdapter(carModelAdapter);
+            });
+        //}
 
-                // set up for getListings() call
-                String currentMake = mCarMakeSpinner.getSelectedItem().toString();
-                int currentMakeId = mVehicleMakes.get(currentMake);
-                String currentModel = mCarModelSpinner.getSelectedItem().toString();
-                int currentModelId = mVehicleModels.get(currentModel);
-                getListings(currentMakeId, currentModelId);
+        /*
+        else{
+            // setting up models spinner
+            carModelAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carModels);
+            carModelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            mCarModelSpinner.setAdapter(carModelAdapter);
+        }
 
-            }
+         */
 
-            @Override
-            public void onFailure(Call<List<Vehicle.Model>> call, Throwable t) {
-                Log.i(TAG, "onFailure() in getModels()");
-            }
-
-        });
 
     }
 
@@ -234,34 +296,45 @@ public class CarListFragment extends Fragment {
 
         int zipCode = 92603; // irvine, ca
 
-        Call<Vehicle.ListingResponse> call = mApiManager.getListings(currentMakeId, currentModelId, zipCode);
-        call.enqueue(new Callback<Vehicle.ListingResponse>() {
-            @Override
-            public void onResponse(Call<Vehicle.ListingResponse> call, Response<Vehicle.ListingResponse> response) {
+        //if(mVehicleListings.isEmpty()) {
+            Call<Vehicle.ListingResponse> call = mApiManager.getListings(currentMakeId, currentModelId, zipCode);
+            call.enqueue(new Callback<Vehicle.ListingResponse>() {
+                @Override
+                public void onResponse(Call<Vehicle.ListingResponse> call, Response<Vehicle.ListingResponse> response) {
 
 
-                if (!response.isSuccessful()) {
-                    Log.i(TAG, "Response not successful in getListings()!");
-                    return;
+                    if (!response.isSuccessful()) {
+                        Log.i(TAG, "Response not successful in getListings()!");
+                        return;
+                    }
+
+                    Vehicle.ListingResponse listResponse = response.body();
+
+                    mVehicleListings = listResponse.getListings();
+
+                    if (!mVehicleListings.isEmpty()) {
+                        removeDuplicateListings();
+                    }
+
+                    updateUI();
                 }
 
-                Vehicle.ListingResponse listResponse = response.body();
-
-                mVehicleListings = listResponse.getListings();
-
-                if (!mVehicleListings.isEmpty()) {
-                    removeDuplicateListings();
+                @Override
+                public void onFailure(Call<Vehicle.ListingResponse> call, Throwable t) {
+                    Log.i(TAG, "onFailure() in getListings()" + t.toString());
                 }
 
-                updateUI();
-            }
+            });
 
-            @Override
-            public void onFailure(Call<Vehicle.ListingResponse> call, Throwable t) {
-                Log.i(TAG, "onFailure() in getListings()" + t.toString());
-            }
+        //}
 
-        });
+        /*
+        else {
+            updateUI();
+        }
+
+         */
+
 
     }
 
