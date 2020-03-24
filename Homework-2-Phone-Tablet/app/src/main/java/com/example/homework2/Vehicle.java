@@ -1,3 +1,11 @@
+// CECS 453 Mobile Development
+// Homework 2
+// Due date: Feb 23, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
+
 package com.example.homework2;
 
 import com.google.gson.annotations.SerializedName;
@@ -7,6 +15,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// POJO class for API calls
 public class Vehicle {
 
     // Vehicle has make

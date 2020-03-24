@@ -1,3 +1,12 @@
+// CECS 453 Mobile Development
+// Homework 2
+// Due date: Feb 23, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
+
+
 package com.example.homework2;
 
 import android.content.Context;
@@ -16,6 +25,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,8 +60,6 @@ public class CarListFragment extends Fragment {
     private static final String baseURL = "https://thawing-beach-68207.herokuapp.com/";
     private static final String TAG = "DEBUG: Homework2";
 
-    boolean isFinished = false;
-
     // Interface that is used to communicate with CarDetailFragment
     interface Listener{
       void carSelected(Vehicle.Listing vehicle_listing); };
@@ -75,6 +84,9 @@ public class CarListFragment extends Fragment {
     }
 
 
+    // Inflate the layout. Make API Call to get car Makes. Set up listener for the
+    // spinners to load correct model and vehicle listing making the API call once the
+    // user has selected
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -131,6 +143,7 @@ public class CarListFragment extends Fragment {
         return v;
     }
 
+    // Register the listener
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -138,9 +151,28 @@ public class CarListFragment extends Fragment {
     }
 
 
+    // Set up the adapter for RecyclerView and update initial UI
     public void updateUI() {
         mCarAdapter = new VehicleAdapter();
         mCarRecyclerView.setAdapter(mCarAdapter);
+
+        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+        if (tabletSize) {
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            if (mVehicleListings.size() > 0) {
+                CarDetailFragment carDetailFragment =  new CarDetailFragment();
+                carDetailFragment.setmSelectedListing(mVehicleListings.get(0));
+                ft.replace(R.id.fragment_container, carDetailFragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commit();
+            } else {
+                Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+                ft.remove(fragment).commit();
+            }
+        }
+
     }
 
     // get vehicle makes from REST api and populate the makes spinner
@@ -178,8 +210,6 @@ public class CarListFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Vehicle.Make>> call, Throwable t) {
                 Log.i(TAG, "onFailure() in getMakes()");
-                isFinished = true;
-
             }
 
         });
@@ -283,8 +313,6 @@ public class CarListFragment extends Fragment {
 
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-
     // view holder for the RecyclerView adapter
     private class VehicleHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -367,7 +395,5 @@ public class CarListFragment extends Fragment {
             return mVehicleListings.size();
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 }

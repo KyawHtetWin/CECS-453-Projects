@@ -1,3 +1,11 @@
+// CECS 453 Mobile Development
+// Homework 2
+// Due date: Feb 23, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
+
 package com.example.homework2;
 
 import android.os.Bundle;
@@ -16,7 +24,7 @@ import java.text.NumberFormat;
 
 public class CarDetailFragment extends Fragment {
 
-
+    // declare views
     private TextView mMakeModelTextView;
     private TextView mPriceTextView;
     private TextView mVehicleDescriptionTextView;
@@ -24,6 +32,7 @@ public class CarDetailFragment extends Fragment {
     private TextView mLocationTextView;
     private ImageView mVehicleImageView;
 
+    // Stores the Listing of the Selected Vehicle
     private Vehicle.Listing mSelectedListing;
 
     /*
@@ -37,12 +46,16 @@ public class CarDetailFragment extends Fragment {
 
      */
 
+
+    // Saved the selected car listing so that correct vehcile display can be shown on
+    // screen rotation
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("vehicle_listing", mSelectedListing);
     }
 
+    // Set up the selectedVehicleListing
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +63,7 @@ public class CarDetailFragment extends Fragment {
             mSelectedListing = (Vehicle.Listing) savedInstanceState.getSerializable("vehicle_listing");
     }
 
+    // Inflate the CarDetailFragment with the layout
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,6 +72,7 @@ public class CarDetailFragment extends Fragment {
 
     }
 
+    // Do the setup of the views in the CarDetailFragment & display the car details
     @Override
     public void onStart() {
         super.onStart();
@@ -100,6 +115,4 @@ public class CarDetailFragment extends Fragment {
     public void setmSelectedListing(Vehicle.Listing mSelectedListing) {
         this.mSelectedListing = mSelectedListing;
     }
-
-
 }
