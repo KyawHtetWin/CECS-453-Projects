@@ -1,3 +1,12 @@
+// CECS 453 Mobile Development
+// Homework 2
+// Due date: Feb 23, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
+
+
 package com.example.homework2;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 public class CarListActivity extends AppCompatActivity implements CarListFragment.Listener{
     private static final String TAG = "DEBUG: Homework2";
 
+    // Display a welcome message to the user
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +35,9 @@ public class CarListActivity extends AppCompatActivity implements CarListFragmen
 
     }
 
+    // This method is called whenever the user select the car. If on tablet, it creates the
+    // CarDetailFragment, and replaces it's framelayout with it. If on phone, it start
+    // CarDetailActivity passing it the vehicle listing that the user has selected.
     @Override
     public void carSelected(Vehicle.Listing vehicle_listing) {
 

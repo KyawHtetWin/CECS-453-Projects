@@ -1,3 +1,12 @@
+// CECS 453 Mobile Development
+// Homework 2
+// Due date: Feb 23, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
+
+
 package com.example.homework2;
 
 import android.os.Bundle;
@@ -16,7 +25,7 @@ import java.text.NumberFormat;
 
 public class CarDetailFragment extends Fragment {
 
-
+    // All the views
     private TextView mMakeModelTextView;
     private TextView mPriceTextView;
     private TextView mVehicleDescriptionTextView;
@@ -24,25 +33,19 @@ public class CarDetailFragment extends Fragment {
     private TextView mLocationTextView;
     private ImageView mVehicleImageView;
 
+    // Stores the Listing of the Selected Vehicle
     private Vehicle.Listing mSelectedListing;
 
-    /*
-    public static CarDetailFragment newInstance(Vehicle.Listing vehicleListing) {
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_VEHICLE_LISTING, vehicleListing);
-        CarDetailFragment fragment = new CarDetailFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-     */
-
+    // Saved the selected car listing so that correct vehcile display can be shown on
+    // screen rotation
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("vehicle_listing", mSelectedListing);
     }
 
+    // Do the setup; Set up the selectedVehicleListing properly
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +53,7 @@ public class CarDetailFragment extends Fragment {
             mSelectedListing = (Vehicle.Listing) savedInstanceState.getSerializable("vehicle_listing");
     }
 
+    // Inflate the CarDetailFragment with the layout
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,6 +62,7 @@ public class CarDetailFragment extends Fragment {
 
     }
 
+    // Do the setup of the views in the CarDetailFragment & display the car details
     @Override
     public void onStart() {
         super.onStart();
@@ -85,7 +90,7 @@ public class CarDetailFragment extends Fragment {
             mVehicleDescriptionTextView.setText(vehicleDescription);
             mDateTextView.setText(mSelectedListing.getDate().substring(5, 16));
 
-
+            //Load the imageView with the URL
             if (mSelectedListing.getImage_url().isEmpty()) {
                 Picasso.get().load(R.drawable.image_coming_soon).into(mVehicleImageView);
             } else {
@@ -97,6 +102,7 @@ public class CarDetailFragment extends Fragment {
         }
     }
 
+    // Set the mSelectedListing
     public void setmSelectedListing(Vehicle.Listing mSelectedListing) {
         this.mSelectedListing = mSelectedListing;
     }

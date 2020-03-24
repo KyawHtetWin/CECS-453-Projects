@@ -1,3 +1,10 @@
+// CECS 453 Mobile Development
+// Homework 2
+// Due date: Feb 23, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
 package com.example.homework2.database;
 
 import android.content.ContentValues;
@@ -20,6 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME , null, VERSION);
     }
 
+    // Create the table to user credentials
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_NAME
@@ -31,12 +39,14 @@ public class DBHelper extends SQLiteOpenHelper {
         );
     }
 
+    // Drop the table & recreates the table for the new version.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS users");
         onCreate(db);
     }
 
+    // Add a new user to the user table
     public boolean addNewUser (String username, String phone, String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -48,12 +58,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    // Gets the user password
     public Cursor getPassword(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select password from users where username='"+username+"'", null );
         return res;
     }
 
+    // Get the user's username
     public Cursor getUsernames() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select username from users", null );

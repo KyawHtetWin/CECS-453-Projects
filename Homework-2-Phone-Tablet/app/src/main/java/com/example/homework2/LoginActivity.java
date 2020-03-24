@@ -1,3 +1,12 @@
+// CECS 453 Mobile Development
+// Homework 2
+// Due date: Feb 23, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
+
+
 package com.example.homework2;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -5,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+
+
+
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;

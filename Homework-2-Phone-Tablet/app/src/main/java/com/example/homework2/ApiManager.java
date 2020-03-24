@@ -1,3 +1,11 @@
+// CECS 453 Mobile Development
+// Homework 2
+// Due date: Feb 23, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
+
 package com.example.homework2;
 
 import java.util.List;

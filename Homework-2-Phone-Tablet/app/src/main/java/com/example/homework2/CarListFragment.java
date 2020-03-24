@@ -1,3 +1,12 @@
+// CECS 453 Mobile Development
+// Homework 2
+// Due date: Feb 23, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
+
+
 package com.example.homework2;
 
 import android.content.Context;
@@ -25,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,32 +63,15 @@ public class CarListFragment extends Fragment {
     private static final String baseURL = "https://thawing-beach-68207.herokuapp.com/";
     private static final String TAG = "DEBUG: Homework2";
 
-    // This is the ArrayAdapter to carMakeSpinner
-    private ArrayAdapter<String> carMakeAdapter = null;
-    // This is the Array List that will store all the car makes
-    private List<String> carMakes = null;
-
-    // This is the ArrayAdapter to carModelSpinner
-    private ArrayAdapter<String> carModelAdapter = null;
-    // This the ArrayList that will store all the car models
-    private List<String> carModels = null;
-
     boolean isFinished = false;
 
     // Interface that is used to communicate with CarDetailFragment
     interface Listener{
-      void carSelected(Vehicle.Listing vehicle_listing); };
+      void carSelected(Vehicle.Listing vehicle_listing);
+
+    };
 
     private Listener listener;
-
-    // This method saved the relevant data so that the app data is preserved on the screen rotation
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("car_makes", (Serializable) carMakes);
-        outState.putSerializable("car_models", (Serializable) carModels);
-        outState.putSerializable("vehicle_listing", mVehicleListings);
-    }
 
     // Simple initialization of the objects
     @Override
@@ -95,24 +88,12 @@ public class CarListFragment extends Fragment {
         mVehicleMakes = new HashMap<>();
         mVehicleModels = new HashMap<>();
         mVehicleListings = new ArrayList<>();
-        /*
-        if(savedInstanceState != null) {
-            carMakes = (List<String>) savedInstanceState.getSerializable("car_makes");
-            carModels = (List<String>) savedInstanceState.getSerializable("car_models");
 
-            //mVehicleModels = (HashMap<String, Integer>) savedInstanceState.getSerializable("vehcile_model");
-            mVehicleListings = (ArrayList<Vehicle.Listing>) savedInstanceState.getSerializable("vehcile_listing");
-            Toast.makeText(getContext(), "SavedInstanceState", Toast.LENGTH_SHORT).show();
-        }
-
-        else {
-
-            mVehicleListings = new ArrayList<>();
-        }
-
-         */
     }
 
+    // Inflate the layout. Make API Call to get car Makes. Set up listener for the
+    // spinners to load correct model and vehicle listing making the API call once the
+    // user has selected
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -126,7 +107,6 @@ public class CarListFragment extends Fragment {
 
         mCarMakeSpinner = (Spinner) v.findViewById(R.id.car_make_spinner);
         mCarModelSpinner = (Spinner) v.findViewById(R.id.car_model_spinner);
-
 
         // API Call to get car makes
         getMakes();
@@ -171,17 +151,18 @@ public class CarListFragment extends Fragment {
     }
 
 
-
+    // Register the listener
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.listener = (Listener) context;
     }
 
-
+    // Set up the adapter for RecyclerView
     public void updateUI() {
         mCarAdapter = new VehicleAdapter();
         mCarRecyclerView.setAdapter(mCarAdapter);
+        /*
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         if (mVehicleListings.size() > 0) {
@@ -195,12 +176,11 @@ public class CarListFragment extends Fragment {
             Fragment fragment = fm.findFragmentById(R.id.fragment_container);
             ft.remove(fragment).commit();
         }
+         */
     }
 
     // get vehicle makes from REST api and populate the makes spinner
     public void getMakes() {
-
-        //if (carMakes == null) {
             Call<List<Vehicle.Make>> call = mApiManager.getMakes();
             call.enqueue(new Callback<List<Vehicle.Make>>() {
                 @Override
@@ -211,7 +191,7 @@ public class CarListFragment extends Fragment {
                     }
 
                     List<Vehicle.Make> results = response.body();
-                    carMakes = new ArrayList<>(); // list of makes for spinner
+                    List<String> carMakes = new ArrayList<>(); // list of makes for spinner
 
                     for (Vehicle.Make make : results) {
                         carMakes.add(make.getVehicle_make());
@@ -219,7 +199,7 @@ public class CarListFragment extends Fragment {
                     }
 
                     // setting up makes spinner
-                    carMakeAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carMakes);
+                    ArrayAdapter<String> carMakeAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carMakes);
                     carMakeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mCarMakeSpinner.setAdapter(carMakeAdapter);
 
@@ -238,21 +218,12 @@ public class CarListFragment extends Fragment {
                 }
 
             });
-        //}
 
-        /*
-        else {
-            carMakeAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carMakes);
-            carMakeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mCarMakeSpinner.setAdapter(carMakeAdapter);
-        }
-        */
     }
 
     // get vehicle models from REST api based on currently selected make, and populate the models spinner
     public void getModels(int currentMakeId) {
 
-        //if(carModels == null) {
             Call<List<Vehicle.Model>> call = mApiManager.getModels(currentMakeId);
             call.enqueue(new Callback<List<Vehicle.Model>>() {
                 @Override
@@ -264,7 +235,7 @@ public class CarListFragment extends Fragment {
                     }
 
                     List<Vehicle.Model> results = response.body();
-                    carModels = new ArrayList<>(); // list of models for spinner
+                    List<String> carModels = new ArrayList<>(); // list of models for spinner
 
                     for (Vehicle.Model model : results) {
                         carModels.add(model.getModel());
@@ -272,7 +243,7 @@ public class CarListFragment extends Fragment {
                     }
 
                     // setting up models spinner
-                    carModelAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carModels);
+                    ArrayAdapter<String> carModelAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carModels);
                     carModelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mCarModelSpinner.setAdapter(carModelAdapter);
 
@@ -291,18 +262,6 @@ public class CarListFragment extends Fragment {
                 }
 
             });
-        //}
-
-        /*
-        else{
-            // setting up models spinner
-            carModelAdapter = new ArrayAdapter<>(getActivity(), R.layout.standard_spinner_format, carModels);
-            carModelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mCarModelSpinner.setAdapter(carModelAdapter);
-        }
-
-         */
-
 
     }
 
@@ -311,7 +270,7 @@ public class CarListFragment extends Fragment {
 
         int zipCode = 92603; // irvine, ca
 
-        //if(mVehicleListings.isEmpty()) {
+
             Call<Vehicle.ListingResponse> call = mApiManager.getListings(currentMakeId, currentModelId, zipCode);
             call.enqueue(new Callback<Vehicle.ListingResponse>() {
                 @Override
@@ -340,17 +299,6 @@ public class CarListFragment extends Fragment {
                 }
 
             });
-
-        //}
-
-        /*
-        else {
-            updateUI();
-        }
-
-         */
-
-
     }
 
     // remove duplicate vehicle listings based on vin number
