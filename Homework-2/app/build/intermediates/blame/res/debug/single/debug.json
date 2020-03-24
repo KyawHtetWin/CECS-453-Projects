@@ -1,0 +1,146 @@
+[
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout_activity_signup.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout/activity_signup.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout_single_vehicle_preview.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout/single_vehicle_preview.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout-land_activity_signup.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout-land/activity_signup.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout-xlarge-land_activity_car_list.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout-xlarge-land/activity_car_list.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout_activity_car_details.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout/activity_car_details.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/drawable-mdpi_ic_launcher_background.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/generated/res/pngs/debug/drawable-mdpi/ic_launcher_background.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout_activity_login.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout/activity_login.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/drawable-anydpi-v21_ic_launcher_background.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/generated/res/pngs/debug/drawable-anydpi-v21/ic_launcher_background.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout_standard_spinner_format.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout/standard_spinner_format.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/drawable-hdpi_ic_launcher_background.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/generated/res/pngs/debug/drawable-hdpi/ic_launcher_background.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout-xlarge-land_fragment_car_list.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout-xlarge-land/fragment_car_list.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/drawable-xhdpi_ic_launcher_background.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/generated/res/pngs/debug/drawable-xhdpi/ic_launcher_background.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout_activity_car_list.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout/activity_car_list.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/drawable-v24/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout_fragment_car_list.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout/fragment_car_list.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/drawable_image_coming_soon.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/drawable/image_coming_soon.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout-land_fragment_car_list.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout-land/fragment_car_list.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/drawable-xxhdpi_ic_launcher_background.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/generated/res/pngs/debug/drawable-xxhdpi/ic_launcher_background.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout-xlarge_activity_car_list.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout-xlarge/activity_car_list.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/drawable-ldpi_ic_launcher_background.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/generated/res/pngs/debug/drawable-ldpi/ic_launcher_background.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/drawable_edit_text_border.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/drawable/edit_text_border.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/drawable-xxxhdpi_ic_launcher_background.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/generated/res/pngs/debug/drawable-xxxhdpi/ic_launcher_background.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout_fragment_car_detail.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout/fragment_car_detail.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/layout-land_activity_login.xml.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/layout-land/activity_login.xml"
+    },
+    {
+        "merged": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png"
+    }
+]

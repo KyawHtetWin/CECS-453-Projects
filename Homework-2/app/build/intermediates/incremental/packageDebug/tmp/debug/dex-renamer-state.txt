@@ -1,0 +1,4 @@
+#Tue Mar 24 01:27:28 PDT 2020
+base.0=/Users/bao/Desktop/CECS-453-Lab-2/CECS-453-Projects/Homework-2/app/build/intermediates/dex/debug/out/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
