@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,8 +42,19 @@ import im.delight.android.location.SimpleLocation;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
     private static final String TAG = "Homework3 Debug:";
+
+    // keys for outstate Bundle
+    private static final String LAT_KEY = "lat_key";
+    private static final String LNG_KEY = "lng_key";
+    private static final String ZOOM_KEY = "zoom_key";
+    private static final String ADDRESSES_KEY = "addresses_key";
+    private static final String MAPTYPE_KEY = "maptype_key";
+
+    private Bundle bundle;
+    private ArrayList<Address> mAddresses;
+
+    private GoogleMap mMap;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     public static final float INITIAL_ZOOM = 15f;
 
@@ -50,13 +62,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private AddressAdapter mAddressAdapter;
     private EditText mAddressEditText;
     private ImageView mAddLocationIcon;
-    private List<Address> mAddresses;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (savedInstanceState != null) {
+            bundle = savedInstanceState;
+            mAddresses = bundle.getParcelableArrayList(ADDRESSES_KEY);
+        } else {
+            bundle = null;
+            mAddresses = new ArrayList<>();
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
@@ -66,12 +84,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .commit();
 
         mapFragment.getMapAsync(this);
-        mAddresses = new ArrayList<>();
-        updateUI();
+        setupUI();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        double lat = mMap.getCameraPosition().target.latitude;
+        double lng = mMap.getCameraPosition().target.longitude;
+        float zoom = mMap.getCameraPosition().zoom;
+        int mapType = mMap.getMapType();
+
+        outState.putDouble(LAT_KEY, lat);
+        outState.putDouble(LNG_KEY, lng);
+        outState.putFloat(ZOOM_KEY, zoom);
+        outState.putInt(MAPTYPE_KEY, mapType);
+        outState.putParcelableArrayList(ADDRESSES_KEY, mAddresses);
     }
 
     // set up the views and listeners
-    public void updateUI() {
+    public void setupUI() {
         mAddressRecyclerView = (RecyclerView) findViewById(R.id.address_recycler_view);
         mAddressRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
@@ -116,14 +149,41 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    // zoom to device current location on startup
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng currentLocation = getCurrentLocation();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLocation, INITIAL_ZOOM);
-        mMap.moveCamera(cameraUpdate);
         enableMyLocation();
+        setUpMap();
+    }
+
+    // set up initial map or restore map state
+    public void setUpMap() {
+
+        // set up initial map
+        if (bundle == null) {
+            LatLng currentLocation = getCurrentLocation();
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLocation, INITIAL_ZOOM);
+            mMap.moveCamera(cameraUpdate);
+
+            // restore map state on orientation change
+        } else {
+            double lat = bundle.getDouble(LAT_KEY);
+            double lng = bundle.getDouble(LNG_KEY);
+            float zoom = bundle.getFloat(ZOOM_KEY);
+            int mapType = bundle.getInt(MAPTYPE_KEY);
+
+            mMap.setMapType(mapType);
+
+            LatLng savedLocation = new LatLng(lat, lng);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(savedLocation, zoom);
+            mMap.moveCamera(cameraUpdate);
+
+            // re-draw markers
+            for (Address address : mAddresses) {
+                LatLng location = new LatLng(address.getLatitude(), address.getLongitude());
+                addMarker(location);
+            }
+        }
     }
 
     // inflate map type menu options
@@ -226,7 +286,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Address address = mAddresses.get(addressPosition);
 
             LatLng newLocation = new LatLng(address.getLatitude(), address.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, INITIAL_ZOOM);
+            float currentZoom = mMap.getCameraPosition().zoom;
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, currentZoom);
             mMap.moveCamera(cameraUpdate);
         }
 
