@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +117,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mAddressAdapter = new AddressAdapter(mAddresses);
         mAddressRecyclerView.setAdapter(mAddressAdapter);
 
+        // unhide RecyclerView and arrange search bar above it
+        if (mAddressAdapter.getItemCount() > 0) {
+            mAddressRecyclerView.setVisibility(View.VISIBLE);
+            rearrangeSearchBar();
+        }
+
+        // hide the RecyclerView if there are no items, unhide otherwise.
+        // then re-arrange search bar position accordingly
+        mAddressAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+
+                // hide or unhide RecyclerView
+                int itemCount = mAddressAdapter.getItemCount();
+                if (itemCount == 0) {
+                    mAddressRecyclerView.setVisibility(View.GONE);
+                } else {
+                    mAddressRecyclerView.setVisibility(View.VISIBLE);
+                }
+
+                rearrangeSearchBar();
+            }
+        });
+
         mAddressEditText = (EditText) findViewById(R.id.address_edit_text);
 
         mAddLocationIcon = (ImageView) findViewById(R.id.add_location_button);
@@ -148,6 +175,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    // re-arrange search bar based on visibility of the RecyclerView
+    public void rearrangeSearchBar() {
+        RelativeLayout searchBar = findViewById(R.id.search_bar_container);
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams) searchBar.getLayoutParams();
+
+        // if RecyclerView hidden -> arrange search bar at bottom
+        if (mAddressRecyclerView.getVisibility() == View.GONE) {
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+
+            // otherwise arrange search bar above RecyclerView
+        } else {
+            layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        }
+
+        searchBar.setLayoutParams(layoutParams);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -161,7 +206,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // set up initial map
         if (bundle == null) {
             LatLng currentLocation = getCurrentLocation();
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLocation, INITIAL_ZOOM);
+            CameraUpdate cameraUpdate = CameraUpdateFactory
+                    .newLatLngZoom(currentLocation, INITIAL_ZOOM);
             mMap.moveCamera(cameraUpdate);
 
             // restore map state on orientation change
