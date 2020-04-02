@@ -31,17 +31,15 @@
             android:paddingEnd="48dp"
             android:paddingBottom="16dp" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/add_location_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/add_location_dark" />
+            android:padding="12dp"
+            android:src="@drawable/add_location_dark"
+            android:background="@null"/>
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -56,6 +54,14 @@
         android:visibility="gone"
         android:scrollbars="vertical" />
 
+    <ImageButton
+        android:id="@+id/hide_button"
+        android:layout_width="46dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="56dp"
+        android:src="@drawable/hide" />
+
 </RelativeLayout>
-
-

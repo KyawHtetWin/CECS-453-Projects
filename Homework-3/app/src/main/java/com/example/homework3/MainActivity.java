@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,13 +47,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final String TAG = "Homework3 Debug:";
 
-    // keys for outstate Bundle
+    // keys for Bundle
     private static final String LAT_KEY = "lat_key";
     private static final String LNG_KEY = "lng_key";
     private static final String ZOOM_KEY = "zoom_key";
     private static final String ADDRESSES_KEY = "addresses_key";
     private static final String MAPTYPE_KEY = "maptype_key";
 
+    // data
     private Bundle bundle;
     private ArrayList<Address> mAddresses;
 
@@ -60,10 +62,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     public static final float INITIAL_ZOOM = 15f;
 
+    // views
     private RecyclerView mAddressRecyclerView;
     private AddressAdapter mAddressAdapter;
     private EditText mAddressEditText;
-    private ImageView mAddLocationIcon;
+    private ImageButton mAddLocationIcon;
+    private ImageButton mHideButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             rearrangeSearchBar();
         }
 
+
         // hide the RecyclerView if there are no items, unhide otherwise.
         // then re-arrange search bar position accordingly
         mAddressAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -144,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mAddressEditText = (EditText) findViewById(R.id.address_edit_text);
 
-        mAddLocationIcon = (ImageView) findViewById(R.id.add_location_button);
+        mAddLocationIcon = (ImageButton) findViewById(R.id.add_location_button);
         mAddLocationIcon.setOnClickListener(new View.OnClickListener() {
             // get the Address from the user input when pressed
             // if valid address, add Address to the RecyclerView, then add a marker on map
@@ -170,6 +175,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mAddressEditText.setError("Address not found!");
                     }
                 }
+            }
+        });
+
+        mHideButton = (ImageButton) findViewById(R.id.hide_button);
+        mHideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAddressRecyclerView.getVisibility() == View.GONE) {
+                    mAddressRecyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    mAddressRecyclerView.setVisibility(View.GONE);
+                }
+
+                rearrangeSearchBar();
             }
         });
 
@@ -294,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             View.OnClickListener, View.OnLongClickListener {
 
         private TextView mAddressTextView;
-        private ImageView mRemoveAddressIcon;
+        private ImageButton mRemoveAddressIcon;
 
         public AddressHolder(LayoutInflater inflater, final ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_address, parent, false));
@@ -303,17 +322,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             itemView.setOnLongClickListener(this);
 
             mAddressTextView = (TextView) itemView.findViewById(R.id.address_text_view);
-
-            mRemoveAddressIcon = (ImageView) itemView.findViewById(R.id.delete_image_view);
-            mRemoveAddressIcon.setOnClickListener(new View.OnClickListener() {
-                // remove address from RecyclerView on icon pressed
-                @Override
-                public void onClick(View v) {
-                    int addressPosition = mAddressRecyclerView.getChildLayoutPosition(itemView);
-                    mAddresses.remove(addressPosition);
-                    mAddressAdapter.notifyDataSetChanged();
-                }
-            });
+            mRemoveAddressIcon = (ImageButton) itemView.findViewById(R.id.delete_image_view);
         }
 
         // set address text in RecyclerView
@@ -366,9 +375,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         @Override
-        public void onBindViewHolder(AddressHolder holder, int position) {
+        public void onBindViewHolder(AddressHolder holder, final int position) {
             Address address = mAddresses.get(position);
             holder.bind(address);
+
+            holder.mRemoveAddressIcon.setOnClickListener(new View.OnClickListener() {
+                // remove address from RecyclerView on icon pressed
+                @Override
+                public void onClick(View v) {
+                    mAddresses.remove(position);
+                    mAddressAdapter.notifyDataSetChanged();
+                }
+            });
         }
 
         @Override

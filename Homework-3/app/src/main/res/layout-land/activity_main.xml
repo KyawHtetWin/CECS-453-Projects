@@ -11,11 +11,11 @@
 
     <RelativeLayout
         android:id="@+id/search_bar_container"
-        android:layout_centerHorizontal="true"
         android:layout_width="450dp"
         android:layout_height="wrap_content"
         android:layout_above="@id/address_recycler_view"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
@@ -45,16 +45,16 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/address_recycler_view"
-        android:layout_centerHorizontal="true"
         android:layout_width="450dp"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_recyclerview"
-        android:visibility="gone"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/hide_button"
