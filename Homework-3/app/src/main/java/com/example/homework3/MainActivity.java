@@ -279,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // zoom to address marker when pressed
         @Override
         public void onClick(View v) {
-            // TODO zoom to address on map
 
             int addressPosition = mAddressRecyclerView.getChildLayoutPosition(v);
             Address address = mAddresses.get(addressPosition);
@@ -293,7 +292,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // un-hide the remove icon when long pressed
         @Override
         public boolean onLongClick(View v) {
-            // TODO display remove button
 
             if (mRemoveAddressIcon.getVisibility() == View.INVISIBLE) {
                 mRemoveAddressIcon.setVisibility(View.VISIBLE);
