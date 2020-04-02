@@ -120,8 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mAddLocationIcon = (ImageView) findViewById(R.id.add_location_button);
         mAddLocationIcon.setOnClickListener(new View.OnClickListener() {
             // get the Address from the user input when pressed
-            // if valid address, add Address to the RecyclerView,
-            // then add a marker on map
+            // if valid address, add Address to the RecyclerView, then add a marker on map
             @Override
             public void onClick(View v) {
                 String inputAddress = mAddressEditText.getText().toString();
