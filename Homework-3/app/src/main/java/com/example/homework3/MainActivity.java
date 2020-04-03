@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String ZOOM_KEY = "zoom_key";
     private static final String ADDRESSES_KEY = "addresses_key";
     private static final String MAPTYPE_KEY = "maptype_key";
+    private static final String HIDDEN_KEY = "hidden_key";
 
     // data
     private Bundle bundle;
@@ -101,11 +102,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         double lng = mMap.getCameraPosition().target.longitude;
         float zoom = mMap.getCameraPosition().zoom;
         int mapType = mMap.getMapType();
+        int hidden = mAddressRecyclerView.getVisibility();
 
         outState.putDouble(LAT_KEY, lat);
         outState.putDouble(LNG_KEY, lng);
         outState.putFloat(ZOOM_KEY, zoom);
         outState.putInt(MAPTYPE_KEY, mapType);
+        outState.putInt(HIDDEN_KEY, hidden);
         outState.putParcelableArrayList(ADDRESSES_KEY, mAddresses);
     }
 
@@ -121,12 +124,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mAddressAdapter = new AddressAdapter(mAddresses);
         mAddressRecyclerView.setAdapter(mAddressAdapter);
 
-        // unhide RecyclerView and arrange search bar above it
-        if (mAddressAdapter.getItemCount() > 0) {
+        // restore RecyclerView hidden state on orientation change
+        if (bundle != null && bundle.getInt(HIDDEN_KEY) == View.VISIBLE) {
             mAddressRecyclerView.setVisibility(View.VISIBLE);
             rearrangeSearchBar();
         }
-
 
         // hide the RecyclerView if there are no items, unhide otherwise.
         // then re-arrange search bar position accordingly
