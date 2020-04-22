@@ -28,8 +28,8 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int DEFAULT_INTERVAL = 2;
-    public static final int FAST_INTERVAL = 1;
+    public static final int DEFAULT_INTERVAL = 1;
+    //public static final int FAST_INTERVAL = 1;
     private static final int PERMISSIONS_FINE_LOCATION = 111;
 
     // UI elements
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         locationRequest.setInterval(1000 * DEFAULT_INTERVAL);
 
         // Retrieve location data every 1 secs on the fastest interval
-        locationRequest.setFastestInterval(1000 * FAST_INTERVAL);
+        //locationRequest.setFastestInterval(1000 * FAST_INTERVAL);
 
         // Wants to retrieve with highest accuracy (i.e Using GPS)
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -224,11 +224,12 @@ public class MainActivity extends AppCompatActivity {
     private void updateGPS() {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
-                MainActivity.this);
+                this);
 
         // Check to make sure that permission for location is granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
+
 
             // User provided the permission. So, get the last know location.
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this,
@@ -249,6 +250,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
+
+
         }
 
         else {
@@ -291,21 +294,37 @@ public class MainActivity extends AppCompatActivity {
         tv_lon.setText("Longitude: " + String.valueOf(currentLocation.getLongitude()));
         tv_acc.setText("Accuracy: "+ String.valueOf(currentLocation.getAccuracy()));
 
-        if(currentLocation.hasSpeed())
-            tv_speed.setText("Speed: " + String.valueOf(currentLocation.getSpeed()) + " m/s");
-        else
-            tv_speed.setText("Speed not available");
+        // Let's udpate the speed and distance only with higher accuracy
+        if(currentLocation.hasAccuracy() && currentLocation.getAccuracy() < 4) {
+            if(currentLocation.hasSpeed())
+                tv_speed.setText("Speed: " + String.valueOf(currentLocation.getSpeed()) + " m/s");
+            else
+                tv_speed.setText("Speed not available");
+
+            double distanceTravelled;
+
+            if(mOldLocation != null) {
+                distanceTravelled = distanceBetweenTwoPoint(oldLocation.getLatitude(),
+                        oldLocation.getLongitude(), currentLocation.getLatitude(),
+                        currentLocation.getLongitude());
+            }
+            else
+                distanceTravelled = 0;
+            mTotalDistance += distanceTravelled;
+
+            tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistance) + " m");
+        }
 
         // This variable stores the result of the distance travelled between two points in one or
         // two seconds interval
-        double distance = 0;
+        //double distance = 0;
         String locationFetchInfo = "OLD LOCATION: ";
 
         if(oldLocation!=null) {
             locationFetchInfo += "(Lat " + oldLocation.getLatitude() + " , Lon " +
                     oldLocation.getLongitude() + ")";
 
-            distance = findDistance(oldLocation, currentLocation);
+            //distance = findDistance(oldLocation, currentLocation);
 
             // Distance may not be fetched for every time interval that is requested,
             // but it might be good enough
@@ -314,9 +333,10 @@ public class MainActivity extends AppCompatActivity {
                 tv_distance.setText("Distance: "+ String.valueOf(distance) + " m");
             else
                 tv_distance.setText("Distance Not Fetched ");
+            */
 
-             */
 
+            /*
             // Distance is fetched within my specified interval (DEFAULT or FAST_INTERVAL)
             if(distance != 0)
                 mTotalDistance += distance;
@@ -328,12 +348,14 @@ public class MainActivity extends AppCompatActivity {
 
             tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistance) + " m");
 
+             */
+
         }
 
         // Since oldLocation is null, this is the first time fetching
         else{
             locationFetchInfo += "None";
-            tv_distance.setText("Distance: 0.0 m");
+            //tv_distance.setText("Distance: 0.0 m");
         }
 
         String locationRetrievalInfo = locationFetchInfo + "\nNEW LOCATION: " +
@@ -346,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
 
     // This method computes and returns the distance between the start and end location
     private double findDistance(Location startLocation, Location endLocation) {
+
         float distance = 0;
         // Will store the distance computed
         float[] distanceResults = new float[2];
@@ -360,6 +383,22 @@ public class MainActivity extends AppCompatActivity {
         distance = distanceResults[0];
 
         return distance;
+    }
+
+    double distanceBetweenTwoPoint(double srcLat, double srcLng, double desLat, double desLng) {
+        double earthRadius = 3958.75;
+        double dLat = Math.toRadians(desLat - srcLat);
+        double dLng = Math.toRadians(desLng - srcLng);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(srcLat))
+                * Math.cos(Math.toRadians(desLat)) * Math.sin(dLng / 2)
+                * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double dist = earthRadius * c;
+
+        double meterConversion = 1609;
+
+        return (int) (dist * meterConversion);
     }
 
 
