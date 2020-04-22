@@ -23,13 +23,17 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
 
-    public static final int DEFAULT_INTERVAL = 4;
+    public static final int DEFAULT_INTERVAL = 2;
     public static final int FAST_INTERVAL = 1;
     private static final int PERMISSIONS_FINE_LOCATION = 111;
+
     // UI elements
-    TextView tv_lat, tv_lon, tv_acc, tv_sensor, tv_speed, tv_distance;
+    TextView tv_lat, tv_lon, tv_acc, tv_sensor, tv_speed, tv_distance, tv_old_new_location;
     ToggleButton tb_start_pause;
     Button btn_finish;
 
@@ -43,14 +47,23 @@ public class MainActivity extends AppCompatActivity {
     private boolean wasRunning;
 
     // Google's API for location services
-    FusedLocationProviderClient fusedLocationProviderClient;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     // Stores the user's current location at all time
-    Location mCurrentLocation;
+    private Location mCurrentLocation = null;
+
+    // Store the user's location fetched before the current location at all time
+    private Location mOldLocation = null;
+
+    // Shows the time when the GPS information is last updated
+    private String mLastUpdateTime;
+
+    // Store the total distance in meters that the users have travelled
+    private double mTotalDistance = 0;
 
     // LocationRequest used to configure all settings related to FusedLocationProviderClient
-    LocationRequest locationRequest;
-    LocationCallback locationCallBack;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +74,12 @@ public class MainActivity extends AppCompatActivity {
         tv_lat = findViewById(R.id.tv_lat);
         tv_lon = findViewById(R.id.tv_lon);
         tv_acc = findViewById(R.id.tv_accuracy);
-        tv_sensor = findViewById(R.id.tv_sensor);
         tv_speed = findViewById(R.id.tv_speed);
         tv_distance = findViewById(R.id.tv_distance);
+        tv_old_new_location = findViewById(R.id.tv_old_new_location);
         tb_start_pause = findViewById(R.id.tb_start_pause);
         btn_finish = findViewById(R.id.btn_finish);
+
 
         // Restore the variables appropriately
         if(savedInstanceState != null) {
@@ -84,10 +98,10 @@ public class MainActivity extends AppCompatActivity {
         // Set the properties of LocationRequest
         locationRequest = new LocationRequest();
 
-        // Retrieve location data every 8 secs
+        // Retrieve location data every 4 secs
         locationRequest.setInterval(1000 * DEFAULT_INTERVAL);
 
-        // Retrieve location data every 5 secs on the fastest interval
+        // Retrieve location data every 1 secs on the fastest interval
         locationRequest.setFastestInterval(1000 * FAST_INTERVAL);
 
         // Wants to retrieve with highest accuracy (i.e Using GPS)
@@ -103,12 +117,18 @@ public class MainActivity extends AppCompatActivity {
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
 
-                for(Location location: locationResult.getLocations()){
-                    if(location != null){
+                if(locationResult != null) {
 
-                        mCurrentLocation = location;
-                        updateGPSUI(mCurrentLocation);
-                    }
+                    // Stores the time at which LocationCallback is triggered
+                    mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+
+                    // Location has previously been fetched. Update the old location
+                    if(mCurrentLocation != null)
+                        mOldLocation = mCurrentLocation;
+
+                    // Update the mCurrentLocation with the latest location retrieved
+                    mCurrentLocation = locationResult.getLastLocation();
+                    updateGPSUI(mCurrentLocation, mOldLocation);
                 }
             }
         };
@@ -217,10 +237,15 @@ public class MainActivity extends AppCompatActivity {
                         public void onSuccess(Location location) {
                             // Update the GPS GUI
                             if (location != null) {
-                                //Toast.makeText(getApplicationContext(),
-                                 //       "Fetched the last known location",Toast.LENGTH_SHORT).show();
+
+                                // Location has previously been fetched. Update the old location
+                                if(mCurrentLocation != null)
+                                    mOldLocation = mCurrentLocation;
+
+                                // Update the mCurrentLocation with the latest location retrieved
                                 mCurrentLocation = location;
-                                updateGPSUI(mCurrentLocation);
+                                updateGPSUI(mCurrentLocation, mOldLocation);
+
                             }
                         }
                     });
@@ -260,17 +285,81 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Update GPS related UI values with the location passed
-    private void updateGPSUI(Location location) {
+    private void updateGPSUI(Location currentLocation, Location oldLocation) {
 
-        tv_lat.setText(String.valueOf(location.getLatitude()));
-        tv_lon.setText(String.valueOf(location.getLongitude()));
-        tv_acc.setText(String.valueOf(location.getAccuracy()));
+        tv_lat.setText("Latitude: " + String.valueOf(currentLocation.getLatitude()));
+        tv_lon.setText("Longitude: " + String.valueOf(currentLocation.getLongitude()));
+        tv_acc.setText("Accuracy: "+ String.valueOf(currentLocation.getAccuracy()));
 
-        if(location.hasSpeed())
-            tv_speed.setText(String.valueOf(location.getSpeed()) + " m/s");
+        if(currentLocation.hasSpeed())
+            tv_speed.setText("Speed: " + String.valueOf(currentLocation.getSpeed()) + " m/s");
         else
             tv_speed.setText("Speed not available");
 
+        // This variable stores the result of the distance travelled between two points in one or
+        // two seconds interval
+        double distance = 0;
+        String locationFetchInfo = "OLD LOCATION: ";
+
+        if(oldLocation!=null) {
+            locationFetchInfo += "(Lat " + oldLocation.getLatitude() + " , Lon " +
+                    oldLocation.getLongitude() + ")";
+
+            distance = findDistance(oldLocation, currentLocation);
+
+            // Distance may not be fetched for every time interval that is requested,
+            // but it might be good enough
+            /*
+            if(distance != 0)
+                tv_distance.setText("Distance: "+ String.valueOf(distance) + " m");
+            else
+                tv_distance.setText("Distance Not Fetched ");
+
+             */
+
+            // Distance is fetched within my specified interval (DEFAULT or FAST_INTERVAL)
+            if(distance != 0)
+                mTotalDistance += distance;
+
+            // Distance is not fetched within my specified interval, so increment the total distance
+            // by zero
+            else
+                mTotalDistance += 0;
+
+            tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistance) + " m");
+
+        }
+
+        // Since oldLocation is null, this is the first time fetching
+        else{
+            locationFetchInfo += "None";
+            tv_distance.setText("Distance: 0.0 m");
+        }
+
+        String locationRetrievalInfo = locationFetchInfo + "\nNEW LOCATION: " +
+                "(Lat " + mCurrentLocation.getLatitude() + " , Lon " +
+                mCurrentLocation.getLongitude() + ")" + "\nLast Update Time: " + mLastUpdateTime;
+
+        tv_old_new_location.setText(locationRetrievalInfo);
+
+    }
+
+    // This method computes and returns the distance between the start and end location
+    private double findDistance(Location startLocation, Location endLocation) {
+        float distance = 0;
+        // Will store the distance computed
+        float[] distanceResults = new float[2];
+
+        double startLat = startLocation.getLatitude();
+        double startLon = startLocation.getLongitude();
+        double endLat = endLocation.getLatitude();
+        double endLon = endLocation.getLongitude();
+
+        Location.distanceBetween(startLat, startLon, endLat, endLon, distanceResults);
+        // Get the distance
+        distance = distanceResults[0];
+
+        return distance;
     }
 
 

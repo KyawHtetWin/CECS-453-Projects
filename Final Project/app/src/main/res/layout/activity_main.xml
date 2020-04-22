@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="16dp"
     tools:context=".MainActivity">
 
@@ -12,207 +14,92 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity='center_horizontal'
-        android:layout_marginStart="85dp"
-        android:layout_marginLeft="85dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="92dp"
-        android:layout_marginRight="92dp"
         android:text="00:00:00"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
         android:textSize="56sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.687"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:layout_editor_absoluteX="98dp"
+        tools:layout_editor_absoluteY="90dp" />
 
     <ToggleButton
         android:id="@+id/tb_start_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity='center_horizontal'
-        android:layout_marginStart="136dp"
-        android:layout_marginLeft="136dp"
-        android:layout_marginEnd="160dp"
-        android:layout_marginRight="160dp"
         android:text="ToggleButton"
         android:textOff="START RUN"
         android:textOn="PAUSE RUN"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.875"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_timer" />
+        tools:layout_editor_absoluteX="157dp"
+        tools:layout_editor_absoluteY="165dp" />
 
     <Button
         android:id="@+id/btn_finish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity='center_horizontal'
-        android:layout_marginStart="136dp"
-        android:layout_marginLeft="136dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="160dp"
-        android:layout_marginRight="160dp"
         android:onClick="onClickFinishRun"
         android:text="FINISH RUN"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.875"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tb_start_pause" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="53dp"
-        android:layout_marginLeft="53dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:text="Latitude"
-        app:layout_constraintEnd_toStartOf="@+id/tv_lat"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_finish" />
+        tools:layout_editor_absoluteX="157dp"
+        tools:layout_editor_absoluteY="229dp" />
 
     <TextView
         android:id="@+id/tv_lat"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="128dp"
-        android:layout_marginRight="128dp"
-        android:text="@string/zero"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_finish" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:text="TextView"
+        android:layout_margin="10dp"
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="306dp" />
 
     <TextView
         android:id="@+id/tv_lon"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="128dp"
-        android:layout_marginRight="128dp"
-        android:text="@string/zero"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
-
-    <TextView
-        android:id="@+id/tv_speed"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="128dp"
-        android:layout_marginRight="128dp"
-        android:text="@string/zero"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sensor" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:text="TextView"
+        android:layout_margin="10dp"
+        tools:layout_editor_absoluteX="41dp"
+        tools:layout_editor_absoluteY="363dp" />
 
     <TextView
         android:id="@+id/tv_accuracy"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="128dp"
-        android:layout_marginRight="128dp"
-        android:text="@string/zero"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_lon" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:text="TextView"
+        android:layout_margin="10dp"
+        tools:layout_editor_absoluteX="37dp"
+        tools:layout_editor_absoluteY="424dp" />
 
     <TextView
-        android:id="@+id/tv_sensor"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="128dp"
-        android:layout_marginRight="128dp"
-        android:text="@string/None"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_accuracy" />
+        android:id="@+id/tv_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:text="TextView"
+        android:layout_margin="10dp"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="467dp" />
 
     <TextView
         android:id="@+id/tv_distance"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="128dp"
-        android:layout_marginRight="128dp"
-        android:layout_marginBottom="50dp"
-        android:text="@string/zero"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_speed"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:text="TextView"
+        android:layout_margin="10dp"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="495dp" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="53dp"
-        android:layout_marginLeft="53dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:text="Longitude"
-        app:layout_constraintEnd_toStartOf="@+id/tv_lon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        android:id="@+id/tv_old_new_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:text="TextView"
+        android:layout_margin="10dp"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="509dp" />
 
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="53dp"
-        android:layout_marginLeft="53dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:text="Speed"
-        app:layout_constraintEnd_toStartOf="@+id/tv_speed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="53dp"
-        android:layout_marginLeft="53dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:layout_marginBottom="50dp"
-        android:text="Distance"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_distance"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="53dp"
-        android:layout_marginLeft="53dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:text="Sensor"
-        app:layout_constraintEnd_toStartOf="@+id/tv_sensor"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="53dp"
-        android:layout_marginLeft="53dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:text="Accuracy"
-        app:layout_constraintEnd_toStartOf="@+id/tv_accuracy"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
