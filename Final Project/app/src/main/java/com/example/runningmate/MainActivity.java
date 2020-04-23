@@ -28,12 +28,13 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int DEFAULT_INTERVAL = 1;
-    //public static final int FAST_INTERVAL = 1;
+    public static final int DEFAULT_INTERVAL = 8;
+    public static final int FAST_INTERVAL = 5;
     private static final int PERMISSIONS_FINE_LOCATION = 111;
 
     // UI elements
-    TextView tv_lat, tv_lon, tv_acc, tv_sensor, tv_speed, tv_distance, tv_old_new_location;
+    TextView tv_lat, tv_lon, tv_acc, tv_sensor, tv_speed, tv_distance, tv_old_new_location,
+            tv_distanceBetween;
     ToggleButton tb_start_pause;
     Button btn_finish;
 
@@ -65,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     private LocationRequest locationRequest;
     private LocationCallback locationCallBack;
 
+    // Store all the ActivityTran
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         tv_speed = findViewById(R.id.tv_speed);
         tv_distance = findViewById(R.id.tv_distance);
         tv_old_new_location = findViewById(R.id.tv_old_new_location);
+        tv_distanceBetween = findViewById(R.id.tv_distanceBetween);
         tb_start_pause = findViewById(R.id.tb_start_pause);
         btn_finish = findViewById(R.id.btn_finish);
 
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         locationRequest.setInterval(1000 * DEFAULT_INTERVAL);
 
         // Retrieve location data every 1 secs on the fastest interval
-        //locationRequest.setFastestInterval(1000 * FAST_INTERVAL);
+        locationRequest.setFastestInterval(1000 * FAST_INTERVAL);
 
         // Wants to retrieve with highest accuracy (i.e Using GPS)
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -250,8 +254,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-
-
         }
 
         else {
@@ -294,29 +296,30 @@ public class MainActivity extends AppCompatActivity {
         tv_lon.setText("Longitude: " + String.valueOf(currentLocation.getLongitude()));
         tv_acc.setText("Accuracy: "+ String.valueOf(currentLocation.getAccuracy()));
 
-        // Let's udpate the speed and distance only with higher accuracy
-        if(currentLocation.hasAccuracy() && currentLocation.getAccuracy() < 4) {
-            if(currentLocation.hasSpeed())
-                tv_speed.setText("Speed: " + String.valueOf(currentLocation.getSpeed()) + " m/s");
-            else
-                tv_speed.setText("Speed not available");
+        if(currentLocation.hasSpeed())
+            tv_speed.setText("Speed: " + String.valueOf(currentLocation.getSpeed()) + " m/s");
+        else
+            tv_speed.setText("Speed not available");
 
-            double distanceTravelled;
+        // Distance Travelled between the old location and current location
+        double distanceTravelled = 0;
 
-            if(mOldLocation != null) {
-                distanceTravelled = distanceBetweenTwoPoint(oldLocation.getLatitude(),
-                        oldLocation.getLongitude(), currentLocation.getLatitude(),
-                        currentLocation.getLongitude());
-            }
-            else
-                distanceTravelled = 0;
-            mTotalDistance += distanceTravelled;
-
-            tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistance) + " m");
+        if(mOldLocation != null) {
+               // distanceTravelled = distanceBetweenTwoPoint(oldLocation.getLatitude(),
+               //         oldLocation.getLongitude(), currentLocation.getLatitude(),
+               //         currentLocation.getLongitude());
+                distanceTravelled = oldLocation.distanceTo(currentLocation);
         }
 
-        // This variable stores the result of the distance travelled between two points in one or
-        // two seconds interval
+        else
+            distanceTravelled = 0;
+
+        tv_distanceBetween.setText("Distance travelled between:" + String.valueOf(distanceTravelled) + " m");
+
+        mTotalDistance += distanceTravelled;
+        tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistance) + " m");
+
+
         //double distance = 0;
         String locationFetchInfo = "OLD LOCATION: ";
 
@@ -385,6 +388,7 @@ public class MainActivity extends AppCompatActivity {
         return distance;
     }
 
+    // Custom method found online
     double distanceBetweenTwoPoint(double srcLat, double srcLng, double desLat, double desLng) {
         double earthRadius = 3958.75;
         double dLat = Math.toRadians(desLat - srcLat);

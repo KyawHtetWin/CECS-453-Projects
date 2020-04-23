@@ -92,6 +92,16 @@
         tools:layout_editor_absoluteY="495dp" />
 
     <TextView
+        android:id="@+id/tv_distanceBetween"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:layout_margin="10dp"
+        android:text="Distance Between: 0 m"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="495dp" />
+
+    <TextView
         android:id="@+id/tv_old_new_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
