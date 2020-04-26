@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
     private String mLastUpdateTime;
 
     // Store the total distance in meters that the users have travelled
-    private double mTotalDistance = 0;
+    private double mTotalDistanceMeter = 0;
+
+    private double mTotalDistanceMile = 0;
 
     // LocationRequest used to configure all settings related to FusedLocationProviderClient
     private LocationRequest locationRequest;
@@ -296,28 +298,42 @@ public class MainActivity extends AppCompatActivity {
         tv_lon.setText("Longitude: " + String.valueOf(currentLocation.getLongitude()));
         tv_acc.setText("Accuracy: "+ String.valueOf(currentLocation.getAccuracy()));
 
-        if(currentLocation.hasSpeed())
-            tv_speed.setText("Speed: " + String.valueOf(currentLocation.getSpeed()) + " m/s");
+
+        if(currentLocation.hasSpeed()) {
+            // 1 m/s = 0.0372823 miles/minutes
+            float speedMeterSec = currentLocation.getSpeed();
+            // Pace is the inverse of speed
+            double paceMinMiles = 1 / speedMeterSec * 0.0372823;
+            //tv_speed.setText("Speed: " + String.valueOf(speedMeterSec) + " m/s");
+            tv_speed.setText("Pace: " + String.valueOf(paceMinMiles) + " min/miles");
+        }
         else
-            tv_speed.setText("Speed not available");
+            tv_speed.setText("Pace not available");
 
         // Distance Travelled between the old location and current location
-        double distanceTravelled = 0;
+        float distanceMeters;
+        double distanceMiles;
 
         if(mOldLocation != null) {
                // distanceTravelled = distanceBetweenTwoPoint(oldLocation.getLatitude(),
                //         oldLocation.getLongitude(), currentLocation.getLatitude(),
                //         currentLocation.getLongitude());
-                distanceTravelled = oldLocation.distanceTo(currentLocation);
+                distanceMeters = oldLocation.distanceTo(currentLocation);
         }
 
         else
-            distanceTravelled = 0;
+            distanceMeters = 0;
 
-        tv_distanceBetween.setText("Distance travelled between:" + String.valueOf(distanceTravelled) + " m");
+        distanceMiles = distanceMeters / 1609.344;
 
-        mTotalDistance += distanceTravelled;
-        tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistance) + " m");
+        // tv_distanceBetween.setText("Distance travelled between:" + String.valueOf(distanceMeters) + " m");
+        tv_distanceBetween.setText("Distance travelled between:" + String.valueOf(distanceMiles) + " miles");
+
+        mTotalDistanceMeter += distanceMeters;
+        mTotalDistanceMile += distanceMiles;
+
+        //tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistanceMeter) + " m");
+        tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistanceMile) + " miles");
 
 
         //double distance = 0;
