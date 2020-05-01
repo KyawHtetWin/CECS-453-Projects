@@ -104,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
         // Set the properties of LocationRequest
         locationRequest = new LocationRequest();
 
-        // Retrieve location data every 4 secs
+        // Retrieve location data
         locationRequest.setInterval(1000 * DEFAULT_INTERVAL);
 
-        // Retrieve location data every 1 secs on the fastest interval
+        // Retrieve location data on its fastest interval
         locationRequest.setFastestInterval(1000 * FAST_INTERVAL);
 
         // Wants to retrieve with highest accuracy (i.e Using GPS)
