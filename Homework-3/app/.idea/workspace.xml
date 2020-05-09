@@ -14,7 +14,11 @@
   </component>
   <component name="AndroidLayouts">
     <shared>
-      <config />
+      <config>
+        <device id="pixel_3a_xl" />
+        <device id="pixel_c" />
+        <target>android-28</target>
+      </config>
     </shared>
   </component>
   <component name="AndroidLogFilters">
@@ -23,9 +27,62 @@
   <component name="ChangeListManager">
     <list default="true" id="674fe80c-f6b6-466a-9ac7-eb14823f90f1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/homework3/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/homework3/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /.idea/caches/build_file_checksums.ser" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /.idea/runConfigurations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /Running Mate Previous Version .zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/google-services.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/proguard-rules.pro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/androidTest/java/com/example/runningmate/ExampleInstrumentedTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/java/com/example/runningmate/LoginActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/java/com/example/runningmate/RegisterActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/drawable/facebook_button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/drawable/google_button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/drawable/ic_login_button.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/drawable/login_hero_image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/drawable/people_run_image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/layout/activity_login.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/layout/activity_register.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/layout/layout_login.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/layout/layout_register.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-hdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-mdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/values/colors.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/values/dimens.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/values/strings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/main/res/values/styles.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /app/src/test/java/com/example/runningmate/ExampleUnitTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /gradle.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Running Mate /settings.gradle" beforeDir="false" />
+    </list>
+    <list id="d727d553-24d1-421f-afca-f6279e5d3378" name="update styling search bar and recyclerview" comment="update styling search bar and recyclerview">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,7 +90,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="192.168.0.112:5555" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_C_API_28" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -46,13 +103,39 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="resourceFile" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="ProjectId" id="1Zutc6SPjeC0Trvv467BN7ZSbwU" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_C_API_28" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-01T21:40:59.229Z" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/res/layout-sw600dp" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.17" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/res/layout-sw600dp" />
+    </key>
+    <key name="MoveInnerDialog.RECENTS_KEY">
+      <recent name="com.example.homework3" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/res/layout-xlarge" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -132,11 +215,83 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="674fe80c-f6b6-466a-9ac7-eb14823f90f1" name="Default Changelist" comment="" />
+      <changelist id="d727d553-24d1-421f-afca-f6279e5d3378" name="update styling search bar and recyclerview" comment="" />
       <created>1585700882724</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1585700882724</updated>
     </task>
+    <task id="LOCAL-00001" summary="update styling search bar and recyclerview">
+      <created>1585785644374</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1585785644374</updated>
+    </task>
+    <task id="LOCAL-00002" summary="update styling for search bar and recyclerview">
+      <created>1585785907424</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1585785907424</updated>
+    </task>
+    <task id="LOCAL-00003" summary="update styling search bar and recyclerview">
+      <created>1585786165677</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1585786165677</updated>
+    </task>
+    <task id="LOCAL-00004" summary="update styling search bar and recyclerview">
+      <created>1585786173983</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1585786173983</updated>
+    </task>
+    <task id="LOCAL-00005" summary="update styling search bar and recyclerview">
+      <created>1585786190607</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1585786190607</updated>
+    </task>
+    <task id="LOCAL-00006" summary="update styling for search bar and recyclerview">
+      <created>1585786201921</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1585786201921</updated>
+    </task>
+    <task id="LOCAL-00007" summary="update styling search bar and recyclerview">
+      <created>1585786252582</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1585786252582</updated>
+    </task>
+    <task id="LOCAL-00008" summary="added tablet(720dp+) layout">
+      <created>1585790900072</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1585790900072</updated>
+    </task>
+    <task id="LOCAL-00009" summary="added tablet(720dp+) layout">
+      <created>1585866715854</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1585866715854</updated>
+    </task>
+    <task id="LOCAL-00010" summary="restore RecyclerView hidden state on orientation change">
+      <created>1585877722263</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1585877722263</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -144,10 +299,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update styling for search bar and recyclerview" />
+    <MESSAGE value="update styling search bar and recyclerview" />
+    <MESSAGE value="added tablet(720dp+) layout" />
+    <MESSAGE value="restore RecyclerView hidden state on orientation change" />
+    <option name="LAST_COMMIT_MESSAGE" value="restore RecyclerView hidden state on orientation change" />
   </component>
 </project>

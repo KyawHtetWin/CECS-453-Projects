@@ -1,3 +1,12 @@
+// CECS 453 Mobile Development
+// Homework 3 - Mapping
+// Due date: April 17, 2020
+
+// Team members:
+// Ben Do
+// Kyaw Htet Win
+
+
 package com.example.homework3;
 
 import androidx.annotation.NonNull;

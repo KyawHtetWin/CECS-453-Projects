@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Homework3</string>
     <string name="default_address">123 Main Street City State</string>
-    <string name="address_hint">Enter address</string>
+    <string name="address_hint">Enter location</string>
     <string name="normal_map">Normal</string>
     <string name="hybrid_map">Hyrbid</string>
     <string name="satellite_map">Satellite</string>
