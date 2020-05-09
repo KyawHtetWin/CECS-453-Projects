@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+    tools:context=".RunActivity">
+
+<LinearLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tv_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:text="00:00:00"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:textSize="56sp"
+        tools:layout_editor_absoluteX="98dp"
+        tools:layout_editor_absoluteY="90dp"
+        android:layout_marginBottom="10dp"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_lat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:text="TextView"
+        android:layout_margin="10dp"
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="306dp" />
+
+    <TextView
+        android:id="@+id/tv_lon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:text="TextView"
+        android:layout_margin="10dp"
+        tools:layout_editor_absoluteX="41dp"
+        tools:layout_editor_absoluteY="363dp" />
+
+    <TextView
+        android:id="@+id/tv_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:layout_margin="10dp"
+        android:text="Speed: 0.0 m/s"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="467dp" />
+
+    <TextView
+        android:id="@+id/tv_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:layout_margin="10dp"
+        android:text="TotalDistance: 0 m"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="495dp" />
+
+    <TextView
+        android:id="@+id/tv_old_new_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:text="TextView"
+        android:layout_margin="10dp"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="509dp" />
+
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_gravity='center_horizontal'
+        android:onClick="onClickStart"
+        android:text="START RUN"
+        tools:layout_editor_absoluteX="157dp"
+        tools:layout_editor_absoluteY="229dp"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="#FFFFFE"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_btn"/>
+
+    <Button
+        android:id="@+id/btn_pause"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_gravity='center_horizontal'
+        android:onClick="onClickPause"
+        android:text="PAUSE RUN"
+        tools:layout_editor_absoluteX="157dp"
+        tools:layout_editor_absoluteY="229dp"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="#FFFFFE"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_btn"/>
+
+    <Button
+        android:id="@+id/btn_stop"
+        android:layout_width="250dp"
+        android:layout_height= "60dp"
+        android:layout_gravity='center_horizontal'
+        android:onClick="onClickStop"
+        android:text="FINISH RUN"
+        tools:layout_editor_absoluteX="157dp"
+        tools:layout_editor_absoluteY="229dp"
+        android:layout_marginBottom="10dp"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="#FFFFFE"
+        android:background="@drawable/custom_btn"/>
+
+</LinearLayout>
+
+
+</ScrollView>
