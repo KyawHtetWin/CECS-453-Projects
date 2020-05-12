@@ -50,6 +50,36 @@ android:layout_height="match_parent"
         tools:layout_editor_absoluteY="363dp" />
 
     <TextView
+        android:id="@+id/tv_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:layout_margin="10dp"
+        android:text="TotalDistance: 0 m"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="495dp" />
+
+    <TextView
+        android:id="@+id/tv_distance_format"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:layout_margin="10dp"
+        android:text="TotalDistance: 0 m"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="495dp" />
+
+    <TextView
+        android:id="@+id/tv_accuracy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:layout_margin="10dp"
+        android:text="TotalDistance: 0 m"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="495dp" />
+
+    <TextView
         android:id="@+id/tv_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,14 +90,27 @@ android:layout_height="match_parent"
         tools:layout_editor_absoluteY="467dp" />
 
     <TextView
-        android:id="@+id/tv_distance"
+        android:id="@+id/tv_speed2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity='center_horizontal'
         android:layout_margin="10dp"
-        android:text="TotalDistance: 0 m"
+        android:text="Speed: 0.0 m/s"
         tools:layout_editor_absoluteX="32dp"
-        tools:layout_editor_absoluteY="495dp" />
+        tools:layout_editor_absoluteY="467dp" />
+
+    <TextView
+        android:id="@+id/tv_pace_format"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity='center_horizontal'
+        android:layout_margin="10dp"
+        android:text="Speed: 0.0 m/s"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="467dp" />
+
+
+
 
     <TextView
         android:id="@+id/tv_old_new_location"

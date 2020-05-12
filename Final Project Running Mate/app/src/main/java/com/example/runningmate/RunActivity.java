@@ -1,6 +1,7 @@
 package com.example.runningmate;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -25,18 +26,21 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class RunActivity extends AppCompatActivity {
 
-    public static final int DEFAULT_INTERVAL = 1;
+    public static final int DEFAULT_INTERVAL = 5;
     //public static final int FAST_INTERVAL = 5;
     private static final int PERMISSIONS_FINE_LOCATION = 111;
 
     // UI elements
-    TextView tv_lat, tv_lon, tv_speed, tv_distance, tv_old_new_location;
+    TextView tv_lat, tv_lon, tv_speed, tv_speed2, tv_distance, tv_old_new_location, tv_pace_format,
+    tv_distance_format, tv_accuracy;
     Button btn_start, btn_pause, btn_stop;
 
     // Indicates the number of seconds passed on StopWatch
@@ -92,8 +96,12 @@ public class RunActivity extends AppCompatActivity {
         tv_lat = findViewById(R.id.tv_lat);
         tv_lon = findViewById(R.id.tv_lon);
         tv_speed = findViewById(R.id.tv_speed);
+        tv_speed2 = findViewById(R.id.tv_speed2);
+        tv_pace_format = findViewById(R.id.tv_pace_format);
         tv_distance = findViewById(R.id.tv_distance);
+        tv_distance_format = findViewById(R.id.tv_distance_format);
         tv_old_new_location = findViewById(R.id.tv_old_new_location);
+        tv_accuracy = findViewById(R.id.tv_accuracy);
 
 
         btn_start = findViewById(R.id.btn_start);
@@ -161,17 +169,12 @@ public class RunActivity extends AppCompatActivity {
 
         // event that is triggered whenever the update interval is met
         locationCallBack = new LocationCallback() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
 
                 if(locationResult != null) {
-
-                    // Location has previously been fetched. Update the old location
-                    if(mCurrentLocation != null)
-                        mOldLocation = mCurrentLocation;
-                    // Update the mCurrentLocation with the latest location retrieved
-                    mCurrentLocation = locationResult.getLastLocation();
 
                     // Interested only in location when user is running
                     if(running) {
@@ -185,7 +188,6 @@ public class RunActivity extends AppCompatActivity {
 
                     }
 
-                    //updateGPSUI(mCurrentLocation, mOldLocation);
                     updateGPSUI(mRunningLocation, mPrevRunningLocation);
                 }
             }
@@ -363,23 +365,14 @@ public class RunActivity extends AppCompatActivity {
 
 
     // Update GPS related UI values with the location passed
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateGPSUI(Location currentLocation, Location oldLocation) {
 
         if(currentLocation != null) {
-            tv_lat.setText("Latitude: " + String.valueOf(currentLocation.getLatitude()));
-            tv_lon.setText("Longitude: " + String.valueOf(currentLocation.getLongitude()));
+            tv_lat.setText("Latitude: " + currentLocation.getLatitude());
+            tv_lon.setText("Longitude: " + currentLocation.getLongitude());
 
-            if(currentLocation.hasSpeed()) {
-                // 1 m/s = 0.0372823 miles/minutes
-                float speedMeterSec = currentLocation.getSpeed();
-                // Pace is the inverse of speed
-                double paceMinMiles = 1 / speedMeterSec * 0.0372823;
-                //tv_speed.setText("Speed: " + String.valueOf(speedMeterSec) + " m/s");
-                tv_speed.setText("Pace: " + String.valueOf(paceMinMiles) + " min/miles");
-            }
-            else
-                tv_speed.setText("Pace not available");
-
+            /************* DISTANCE *************/
             // Distance Travelled between the old location and current location
             float distanceMeters;
             double distanceMiles;
@@ -391,9 +384,7 @@ public class RunActivity extends AppCompatActivity {
             else
                 distanceMeters = 0;
 
-            distanceMiles = distanceMeters / 1609.344;
-
-            mTotalDistanceMeter += distanceMeters;
+            distanceMiles = meterToMile(distanceMeters);
 
             // If the run is paused, no need to update the mTotalDistanceMile
             if(isRunPaused)
@@ -402,7 +393,47 @@ public class RunActivity extends AppCompatActivity {
                 mTotalDistanceMile += distanceMiles;
 
             //tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistanceMeter) + " m");
-            tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistanceMile) + " miles");
+            tv_distance.setText("Total Distance: "+ mTotalDistanceMile + " miles");
+            tv_distance_format.setText("Total Distance Rounded: " + round(mTotalDistanceMile, 5) + " miles");
+
+
+
+            tv_accuracy.setText("Accuracy: " + currentLocation.getAccuracy());
+
+
+
+            double paceSecMiles = 0;
+            double speedMeterSec = 0;
+
+            /************ SPEED && PACE *************/
+            if(currentLocation.hasSpeed()) {
+                    speedMeterSec = (double)currentLocation.getSpeed();
+                    tv_speed.setText("Speed: " + speedMeterSec + " m/s");
+
+                    // Round the speed down before finding pace
+                    speedMeterSec = round(speedMeterSec, 4);
+                    if(speedMeterSec < 1) {
+                        tv_speed2.setText("Pace: " + 0 + " sec/miles");
+                    }
+
+                    else {
+                        // Pace is the inverse of speed
+                        paceSecMiles = meterPerSecToSecPerMile(speedMeterSec);
+                        tv_speed2.setText("Pace: " + paceSecMiles + " sec/miles");
+                    }
+            }
+            else
+                tv_speed.setText("Pace not available");
+
+
+            /**  FROMATTING PACE **/
+            int hours = (int) paceSecMiles/3600;
+            int minutes = (int)(paceSecMiles%3600) / 60;
+            int secs = (int)paceSecMiles%60;
+
+            // Format the pace
+            String pace = String.format("Pace formatted: %d:%02d:%02d", hours, minutes, secs);
+            tv_pace_format.setText(pace);
 
 
             //double distance = 0;
@@ -429,10 +460,31 @@ public class RunActivity extends AppCompatActivity {
         else {
             tv_lat.setText("Latitude: Not Retrieved yet");
             tv_lon.setText("Longitude: Not Retrieved yet");
-            tv_speed.setText("Pace: Not Retrieved yet");
+            tv_speed.setText("Speed: Not Retrieved yet");
+            tv_speed2.setText("Pace: Not Retrieved yet");
             tv_distance.setText("Total Distance: Not Retrieved yet");
+            tv_pace_format.setText("Not Retrieved yet");
+            tv_distance_format.setText("Not Retrieved yet");
             tv_old_new_location.setText("Not Retrieved yet");
+            tv_accuracy.setText("Acc Not Retrieved");
         }
     }
 
+
+    /************** UNIT CONVERSIONS ****************************/
+    private double meterToMile(double meter) {
+        return meter/ 1609.344;
+    }
+
+    private double meterPerSecToSecPerMile(double meterPerSecond) {
+        return 1609.344/ meterPerSecond;
+    }
+
+    /*********** ROUNDING DOUBLES *******************/
+    // Simply rounds down to number of places specified
+    private double round (double value, int places) {
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_DOWN);
+        return bd.doubleValue();
+    }
 }
