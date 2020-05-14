@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,15 +45,26 @@ public class ImageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_image);
-        setContentView(R.layout.image_retrieve);
+         setContentView(R.layout.image_retrieve);
         // The image view to
         imageView = findViewById(R.id.get_image);
 
-        RetrieveImage();
+        mImageRef = FirebaseStorage.getInstance().getReference("images/screenshot.jpg");;
 
+        Picasso.get()
+                .load("https://firebasestorage.googleapis.com/v0/b/homework3-5e976" +
+                        ".appspot.com/o/images%2F1589437260018.jpg?alt=media&token=673c4920-471c-4923-bc0e-3fa96ba719bb")
+                .placeholder(R.mipmap.ic_launcher)
+                .fit()
+                .centerCrop()
+                .into(imageView);
+
+
+        //RetrieveImage();
 
         /*
-        TRYING TO GET RECYCLER VIEW TO WORK
+
+        //TRYING TO GET RECYCLER VIEW TO WORK
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -86,8 +99,14 @@ public class ImageActivity extends AppCompatActivity {
         });
 
          */
+
     }
 
+    /*********
+     *
+     * NOT NEEDED ANYMORE. USE PICASSO
+     *
+     */
     public void RetrieveImage() {
         // Testting on a sample image, that is in Storage.
         mImageRef = FirebaseStorage.getInstance().getReference("images/screenshot.jpg");

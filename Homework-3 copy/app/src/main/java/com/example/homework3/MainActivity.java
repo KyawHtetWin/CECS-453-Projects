@@ -63,6 +63,7 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.gms.maps.model.SquareCap;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -324,7 +325,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         final GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
             @Override
             public void onSnapshotReady(Bitmap bitmap) {
-
                 save_screenshot.setImageBitmap(bitmap);
                 uploadImage(bitmap);
             }
@@ -344,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //StorageReference imagesRef = storageRef.child("images/screenshot2.jpg");
         // INSTEAD OF Passing in an image name everytime, pass system time in milliseconds to get
         // unique name
-        StorageReference imagesRef = storageRef.child("images/"+ System.currentTimeMillis() +".jpg");
+        StorageReference imagesRef = storageRef.child("images/screenshot10.jpg");
 
         UploadTask uploadTask = imagesRef.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -356,19 +356,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                String downloadUrl = taskSnapshot.getStorage().getDownloadUrl().toString();
-                // Do what you want
 
-                Upload upload = new Upload("Google Map Screenshot", downloadUrl);
-                // Creates a new entry in our database with unique id
-                String uploadId = mDatabaseRef.push().getKey();
-                // And set its data to our upload file
-                mDatabaseRef.child(uploadId).setValue(upload);
+                if (taskSnapshot.getMetadata() != null) {
+                    if (taskSnapshot.getMetadata().getReference() != null) {
+                        Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
 
+                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String imageUrl = uri.toString();
+                                //createNewPost(imageUrl);
+                                Upload upload = new Upload("Google Map Screenshot", imageUrl);
+                                // Creates a new entry in our database with unique id
+                                String uploadId = mDatabaseRef.push().getKey();
+                                // And set its data to our upload file
+                                mDatabaseRef.child(uploadId).setValue(upload);
+
+                            }
+                        });
+                    }
+                }
 
                 // Save the  screenshot
-                Toast.makeText(getApplicationContext(),"Firebase Saved",Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(),"Firebase Saved",Toast.LENGTH_LONG).show();
 
             }
         });

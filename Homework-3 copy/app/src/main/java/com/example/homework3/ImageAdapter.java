@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -39,6 +41,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         Upload uploadCurrent = mUploads.get(position);
         holder.textViewName.setText(uploadCurrent.getName());
 
+        /*
         // Use Picasso to load images with Url
         Picasso.get()
                 .load(uploadCurrent.getImageUrl())
@@ -46,6 +49,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 .fit()
                 .centerCrop()
                 .into(holder.imageView);
+
+         */
+        //Toast.makeText(mContext,uploadCurrent.getImageUrl(),Toast.LENGTH_LONG).show();
+        //Glide.with(mContext).load(uploadCurrent.getImageUrl()).placeholder(R.mipmap.ic_launcher)
+          //      .into(holder.imageView);
     }
 
     // Show as many as in upload list
