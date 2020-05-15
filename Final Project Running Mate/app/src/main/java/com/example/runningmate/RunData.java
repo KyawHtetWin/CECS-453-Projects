@@ -1,6 +1,9 @@
+/*****
+ * This is a model class that encapsulates a single run of the runner by
+ * storing appropriate runner stats.
+ ****/
+
 package com.example.runningmate;
-
-
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.time.LocalDate;
@@ -17,6 +20,7 @@ public class RunData {
     public RunData(){
     }
 
+    // Constructor
     public RunData(String elapsedTime, String pace, String distance, String dateTime, String imageUrl) {
         this.elapsedTime = elapsedTime;
         this.pace = pace;

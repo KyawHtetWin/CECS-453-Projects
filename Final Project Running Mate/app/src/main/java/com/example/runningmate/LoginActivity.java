@@ -1,3 +1,9 @@
+/*****
+ *  Login Activity allows the user to login in to our app using Firebase Authentication.
+ *  If the user is not already registered, they can register to the app. In case the user forgets
+ *  password, they can also reset it with the link sent to their email.
+ *****/
+
 package com.example.runningmate;
 
 import androidx.annotation.NonNull;
@@ -23,10 +29,14 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
+    // TextView
     EditText editTextEmail, editTextPassword;
     ImageView iv_login;
     TextView tv_signup;
+
+    // A reference to FirebaseAuth
     FirebaseAuth fAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                // Get the email and password
                 String email = editTextEmail.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
 
@@ -107,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordResetDialog.setMessage("Enter Your Email To Received Reset Link.");
         passwordResetDialog.setView(resetMail);
 
+        // The user wants to reset password
         passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -126,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // The user don't want to reset password
         passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

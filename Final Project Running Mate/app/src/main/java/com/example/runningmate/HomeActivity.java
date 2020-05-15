@@ -1,3 +1,9 @@
+/****
+ * The HomeActivity displays the user profile information in the navigation drawer and
+ * show the user's feed in the RecyclerView that retrieves all the user's previous run.
+ *
+ *****/
+
 package com.example.runningmate;
 
 import android.Manifest;
@@ -102,6 +108,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(intent);
             finish();
             return;
+
         } else {
 
             // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -119,6 +126,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    // The navigation drawer displays the user information and provides a support section
     public void setUpNavDrawer() {
         navView = findViewById(R.id.nav_view);
         View parentView = navView.getHeaderView(0);
@@ -130,6 +138,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         navDisplayName.setText(currentUser.getDisplayName());
         navEmail.setText(currentUser.getEmail());
 
+        // Set up listeners for each item in the navigation drawer
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -412,6 +421,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             paceTextView.setText(pace + "/mi");
             dateTimeTextView.setText(dateTime);
 
+            // Retrieves data with the image url from the firebase
             if (imageUrl.equals("NO IMAGE")) {
                 Picasso.get().load(R.drawable.sample_route).into(routeImageView);
             } else {
@@ -427,10 +437,12 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    // This method enables the user to update their profile name
     public void editProfilePressed() {
         final EditText editText = new EditText(HomeActivity.this);
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(HomeActivity.this, android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
+        AlertDialog.Builder alert = new AlertDialog.Builder(HomeActivity.this,
+                android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
         alert.setMessage("Enter new name");
         alert.setView(editText);
 
@@ -442,6 +454,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                     newDisplayName = "Unknown";
                 }
 
+                // Changes the request on the Firebase
                 UserProfileChangeRequest update = new UserProfileChangeRequest.Builder()
                         .setDisplayName(newDisplayName)
                         .build();
@@ -460,6 +473,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         alert.show();
     }
 
+    // Allows the user to log out of the app
     public void logOutPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
         builder.setMessage("Are you sure you want to log out?")
@@ -480,6 +494,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         alert.show();
     }
 
+    // Show them the information where they can contact to get support on the application
     public void contactPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
         builder.setTitle("Support");
@@ -489,6 +504,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         alert.show();
     }
 
+    // Show the information on the version of our application
     public void aboutPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
         builder.setTitle("About");

@@ -1,3 +1,9 @@
+/*****
+ * Register Activity allows the user to register to our application using their email.
+ * If the user provides all the requested fields, they will be added to the Firebase.
+ */
+
+
 package com.example.runningmate;
 
 import androidx.annotation.NonNull;
@@ -80,7 +86,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 if(task.isSuccessful()) {
                                     // User added to the Firebase successful
                                     // set user display name
-
                                     UserProfileChangeRequest update = new UserProfileChangeRequest.Builder()
                                             .setDisplayName(name)
                                             .build();
@@ -90,6 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         user.updateProfile(update);
                                     }
 
+                                    // Take the user to the main activity
                                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
 
                                 }
@@ -110,8 +116,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    // Take the user to the login page
     public void onLoginClick(View v) {
-
         startActivity(new Intent(this, LoginActivity.class));
     }
 }

@@ -1,3 +1,10 @@
+/****
+ * The main functionality of this RunActivity is to show the information to our runner
+ * such as the time elapsed, total distance of the run, current pace and average pace
+ * at the end.
+ */
+
+
 package com.example.runningmate;
 
 import androidx.annotation.NonNull;
@@ -77,6 +84,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private double distance;
     private int currentPace;
     private int avgPace;
+
+    // Represents the location of the user in one run session
     private ArrayList<LatLng> positions;
 
     // timer
@@ -117,8 +126,9 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     } // end of OnCreate()
 
+
+    // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     public void getMap() {
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -127,12 +137,14 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
+    // Get the current date and time
     public void getDateTime() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' h:mm a");
         LocalDateTime dt = LocalDateTime.now();
         dateTime = dtf.format(dt);
     }
 
+    // This method will request the user location in every 2 seconds interval as the user goes on run
     public void getLocation() {
         location = new SimpleLocation(this, true, false, 2000);
         oldPosition = location.getPosition();
@@ -148,10 +160,10 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         location.setListener(new SimpleLocation.Listener() {
             @Override
             public void onPositionChanged() {
+                // If the user is running, show the their pace and distance
                 if (isRunning) {
                     updateSpeed();
                     updateDistance();
-
                     oldPosition = location.getPosition();
                     positions.add(new LatLng(location.getLatitude(), location.getLongitude())); // add new position
                 }
@@ -170,6 +182,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    // This method is called after the request to get user's permission
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
@@ -186,6 +199,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    // This method will compute the distance between the current and last to the current position
+    // of the runner and update the view with the total distance of the runner in mile
     public void updateDistance() {
         double lat1 = oldPosition.latitude;
         double lng1 = oldPosition.longitude;
@@ -200,6 +215,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         distance_textView.setText(mileStr);
     }
 
+    // This method will retrieve the speed of the runner at each location and calculate the
+    // runner's pace in seconds per mile to update the view
     public void updateSpeed() {
         // 1 m/s = 1609.344 seconds/mile
         double speed = (1609.34/location.getSpeed());
@@ -219,6 +236,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         currentPace_textView.setText(pace);
     }
 
+    // This method sets up views and the listener to respond to user clicks
     @SuppressLint("ClickableViewAccessibility")
     public void setupViews() {
 
@@ -275,7 +293,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-
+        // Runner wants to start their run
         start_button.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -284,6 +302,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                         v.invalidate();
                         break;
                     }
+
                     case MotionEvent.ACTION_UP: {
                         v.getBackground().clearColorFilter();
                         v.invalidate();
@@ -303,6 +322,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        // The user pauses the run
         pause_button.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -330,6 +350,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        // End button is pressed
         end_button.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -342,7 +363,10 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
                         v.getBackground().clearColorFilter();
                         v.invalidate();
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(RunActivity.this, android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
+                        // At the end of the run, present the user with the choice to save their run
+                        // on Firebase
+                        AlertDialog.Builder builder = new AlertDialog.Builder(RunActivity.this,
+                                android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
                         builder.setMessage("Save run?")
                                 .setCancelable(false)
                                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
@@ -380,8 +404,10 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     } // end of setupViews()
 
+    // Sends the running stats of the user to the Firebase
     public void sendDataToDatabase(String imageUrl) {
 
+        // Distance in miles
         double mile = distance / 1609.344;
         String distance = String.format(Locale.US,"%.2f", mile);
 
@@ -398,6 +424,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
         //=====================================================//
+        // Calculate the average pace of the user
         int avgPace = (int) (seconds / mile); // avg pace in seconds per mile
         hours = avgPace / 3600;
         minutes = (avgPace % 3600) / 60;
@@ -433,8 +460,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         userPath.setJointType(JointType.ROUND);
     }
 
+    // This method takes a screenshot of the user route and upload it
     public void captureRoute() {
-
         final GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
             @Override
             public void onSnapshotReady(Bitmap bitmap) {
@@ -480,12 +507,16 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+    // Takes the user to the home screen
     public void goToHomeScreen() {
         Intent intent = new Intent(RunActivity.this, HomeActivity.class);
         startActivity(intent);
         finish();
     }
 
+
+    // This method sets up the timer and update the number of timer view with the number of
+    // seconds that has elapsed by properly formatting into HH:MM:SS
     public void setupTimer() {
         long maxTime = 43200; // 12 hours max time
         long intervalSeconds = 1000; // 1 second interval
@@ -514,11 +545,13 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         };
     } // end of setupTimer()
 
+    // Starts the timer
     public void startTimer() {
         timer.start();
         isRunning = true;
     }
 
+    // Stops the timer
     public void stopTimer() {
         timer.cancel();
         isRunning = false;
@@ -538,12 +571,14 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onPause();
     }
 
+    // This method is called when the map is ready
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         enableLocation();
 
         LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        // Simply move the camera to the current user's location
         CameraUpdate cameraUpdate = CameraUpdateFactory
                 .newLatLngZoom(currentLocation, INITIAL_ZOOM);
         map.moveCamera(cameraUpdate);
