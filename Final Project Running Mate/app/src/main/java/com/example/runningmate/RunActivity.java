@@ -1,490 +1,586 @@
+/****
+ * The main functionality of this RunActivity is to show the information to our runner
+ * such as the time elapsed, total distance of the run, current pace and average pace
+ * at the end.
+ */
+
+
 package com.example.runningmate;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Build;
+import android.graphics.Bitmap;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.CountDownTimer;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.JointType;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DateFormat;
+import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Locale;
 
-public class RunActivity extends AppCompatActivity {
+import im.delight.android.location.SimpleLocation;
 
-    public static final int DEFAULT_INTERVAL = 5;
-    //public static final int FAST_INTERVAL = 5;
-    private static final int PERMISSIONS_FINE_LOCATION = 111;
 
-    // UI elements
-    TextView tv_lat, tv_lon, tv_speed, tv_speed2, tv_distance, tv_old_new_location, tv_pace_format,
-    tv_distance_format, tv_accuracy;
-    Button btn_start, btn_pause, btn_stop;
+public class RunActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    // Indicates the number of seconds passed on StopWatch
+    // buttons
+    private ImageButton start_button;
+    private ImageButton pause_button;
+    private ImageButton end_button;
+    private ImageButton run_stats_button;
+    private ImageButton map_button;
+
+    // textViews
+    private TextView time_textView;
+    private TextView distance_textView;
+    private TextView currentPace_textView;
+    private TextView avgPace_textView;
+
+    private FrameLayout runMapFrameLayout;
+    private LinearLayout runStatsLinearLayout;
+
+    // run stats
     private int seconds;
+    private double distance;
+    private int currentPace;
+    private int avgPace;
 
-    // Indicates whether the stopwatch is running (Users physically running)
-    private boolean running;
+    // Represents the location of the user in one run session
+    private ArrayList<LatLng> positions;
 
-    // Indicates whether the stopwatch was running before screen rotation (Users physically running)
-    private boolean wasRunning;
+    // timer
+    private CountDownTimer timer;
 
-    // Google's API for location services
-    private FusedLocationProviderClient fusedLocationProviderClient;
+    // while running or on pause
+    private boolean isRunning;
 
-    // Stores the user's current location at all time
-    private Location mCurrentLocation;
+    // mapping components
+    private SimpleLocation location;
+    private SimpleLocation.Point oldPosition;
 
-    // Store the user's location fetched before the current location at all time
-    private Location mOldLocation;
+    private GoogleMap map;
+    private Polyline userPath;
 
-    // Shows the time when the GPS information is last updated
-    private String mLastUpdateTime;
+    private String dateTime;
 
-    // Store the total distance in meters that the users have travelled
-    private double mTotalDistanceMeter = 0;
-
-    private double mTotalDistanceMile;
-
-    // LocationRequest used to configure all settings related to FusedLocationProviderClient
-    private LocationRequest locationRequest;
-    private LocationCallback locationCallBack;
-
-    // Stores the last location while running
-    private Location mRunningLocation;
-    // Stores the previous to the last location while running
-    private Location mPrevRunningLocation;
-
-    //Stores a list of all the location that users have run
-    private ArrayList<Location> runLocations;
-
-    private boolean isRunPaused;
-
-    // Animation
-    Animation start_btn, pause_btn, stop_btn;
-
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
+    public static final float INITIAL_ZOOM = 15f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
 
-        // Get References to UI
-        tv_lat = findViewById(R.id.tv_lat);
-        tv_lon = findViewById(R.id.tv_lon);
-        tv_speed = findViewById(R.id.tv_speed);
-        tv_speed2 = findViewById(R.id.tv_speed2);
-        tv_pace_format = findViewById(R.id.tv_pace_format);
-        tv_distance = findViewById(R.id.tv_distance);
-        tv_distance_format = findViewById(R.id.tv_distance_format);
-        tv_old_new_location = findViewById(R.id.tv_old_new_location);
-        tv_accuracy = findViewById(R.id.tv_accuracy);
+        distance = 0;
+        currentPace = 0;
+        avgPace = 0;
+        positions = new ArrayList<>();
+
+        setupViews();
+        setupTimer();
+        getLocation();
+        getMap();
+
+        getDateTime();
+        startTimer();
+
+    } // end of OnCreate()
 
 
-        btn_start = findViewById(R.id.btn_start);
-        btn_pause = findViewById(R.id.btn_pause);
-        btn_stop = findViewById(R.id.btn_stop);
+    // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+    public void getMap() {
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.runMap_fragment, mapFragment)
+                .commit();
+        mapFragment.getMapAsync(this);
+    }
 
-        // Create optional animation
-        btn_stop.setAlpha(0);
-        btn_pause.setAlpha(0);
+    // Get the current date and time
+    public void getDateTime() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' h:mm a");
+        LocalDateTime dt = LocalDateTime.now();
+        dateTime = dtf.format(dt);
+    }
 
-        // Load the Animation
-        start_btn = AnimationUtils.loadAnimation(this, R.anim.start_btn);
-        pause_btn = AnimationUtils.loadAnimation(this, R.anim.pause_btn);
-        stop_btn = AnimationUtils.loadAnimation(this, R.anim.stop_btn);
+    // This method will request the user location in every 2 seconds interval as the user goes on run
+    public void getLocation() {
+        location = new SimpleLocation(this, true, false, 2000);
+        oldPosition = location.getPosition();
 
-        // Pass the animation to their view elements
-        btn_start.startAnimation(start_btn);
-        btn_pause.startAnimation(pause_btn);
-        btn_stop.startAnimation(stop_btn);
+        positions.add(new LatLng(location.getLatitude(), location.getLongitude())); // add initial position
 
-
-        // Restore the variables appropriately
-        if(savedInstanceState != null) {
-            seconds = savedInstanceState.getInt("seconds");
-            running = savedInstanceState.getBoolean("running");
-            wasRunning = savedInstanceState.getBoolean("wasRunning");
-            isRunPaused = savedInstanceState.getBoolean("isRunPaused");
-
-            runLocations= savedInstanceState.getParcelableArrayList("runLocations");
-            mRunningLocation = savedInstanceState.getParcelable("mRunningLocation");
-            mPrevRunningLocation = savedInstanceState.getParcelable("mPrevRunningLocation");
-            mTotalDistanceMile = savedInstanceState.getDouble("mTotalDistanceMile");
-            mLastUpdateTime = savedInstanceState.getString("mLastUpdateTime");
-
+        // if we can't access the location yet
+        if (!location.hasLocationEnabled()) {
+            // ask the user to enable location access
+            SimpleLocation.openSettings(this);
         }
 
-        else{
-            seconds = 0;
-            running = false;
-            wasRunning = false;
-            isRunPaused = false;
-
-            runLocations = new ArrayList<>();
-            mRunningLocation = null;
-            mPrevRunningLocation = null;
-            mTotalDistanceMile = 0;
-            mLastUpdateTime = "";
-        }
-
-        // Set the properties of LocationRequest
-        locationRequest = new LocationRequest();
-
-        // Retrieve location data
-        locationRequest.setInterval(1000 * DEFAULT_INTERVAL);
-
-        // Retrieve location data on its fastest interval
-        //locationRequest.setFastestInterval(1000 * FAST_INTERVAL);
-
-        // Wants to retrieve with highest accuracy (i.e Using GPS)
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        // Get the user's last known location or their current location when the app runs for
-        // the first time
-        updateGPS();
-
-        // event that is triggered whenever the update interval is met
-        locationCallBack = new LocationCallback() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
+        location.setListener(new SimpleLocation.Listener() {
             @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-
-                if(locationResult != null) {
-
-                    // Interested only in location when user is running
-                    if(running) {
-                        // Stores the time at which LocationCallback is triggered
-                        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-                        if(mRunningLocation != null)
-                            mPrevRunningLocation = mRunningLocation;
-
-                        mRunningLocation = locationResult.getLastLocation();
-                        runLocations.add(mRunningLocation);
-
-                    }
-
-                    updateGPSUI(mRunningLocation, mPrevRunningLocation);
+            public void onPositionChanged() {
+                // If the user is running, show the their pace and distance
+                if (isRunning) {
+                    updateSpeed();
+                    updateDistance();
+                    oldPosition = location.getPosition();
+                    positions.add(new LatLng(location.getLatitude(), location.getLongitude())); // add new position
                 }
-            }
-        };
-
-        setStopWatch();
-
-    } // End of OnCreate
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // If the user was running before the activity gets destroyed for some reasons, they
-        // should be able to continue running afterwards
-        if(wasRunning)
-            running = true;
-
-        // Start Location Update
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack,
-                null);
-    }
-
-    // Stopwatch starts running
-    public void onClickStart(View view) {
-        // Show pause and stop button, hide start button
-        btn_pause.animate().alpha(1).translationY(-80).setDuration(300).start();
-        btn_stop.animate().alpha(1).translationY(-80).setDuration(300).start();
-        btn_start.animate().alpha(0).setDuration(300).start();
-
-        // Starts running
-        running = true;
-        isRunPaused = false;
-    }
-
-    // Stopwatch pauses running
-    public void onClickPause(View view) {
-        // Show start button, hide start and stop button
-        btn_start.animate().alpha(1).translationY(-80).setDuration(300).start();
-        btn_stop.animate().alpha(0).setDuration(300).start();
-
-        // Pause the running
-        running = false;
-        isRunPaused = true;
-    }
-
-    // Stopwatch finishes running
-    public void onClickStop(View view) {
-        // Show start button, hide pause and stop button
-        btn_start.animate().alpha(1).translationY(-80).setDuration(300).start();
-        btn_pause.animate().alpha(0).setDuration(300).start();
-        btn_stop.animate().alpha(0).setDuration(300).start();
-
-        // Finishes the running
-        running = false;
-        isRunPaused = false;
-    }
-
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // If the user activity gets paused for some reason in the middle of the run,
-        // set the wasRunning to be able to restore its state appropriately
-        wasRunning = running;
-        running = false;
-
-        // Stop Location Update
-        fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
-    }
-
-    // Save the necessary variables to survive Activity destruction
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("seconds", seconds);
-        outState.putBoolean("running", running);
-        outState.putBoolean("wasRunning", wasRunning);
-        outState.putBoolean("isRunPaused", isRunPaused);
-
-        outState.putParcelableArrayList("runLocations", runLocations);
-        outState.putParcelable("mRunningLocation", mRunningLocation);
-        outState.putParcelable("mPrevRunningLocation", mPrevRunningLocation);
-        outState.putDouble("mTotalDistanceMile", mTotalDistanceMile);
-        outState.putString("mLastUpdateTime", mLastUpdateTime);
-
-
-    }
-
-    // This method will update the stopwatch every second
-    private void setStopWatch() {
-        final  TextView tv_timer = findViewById(R.id.tv_timer);
-        // Creating a reference to a new Handler
-        final Handler handler = new Handler();
-
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                int hours = seconds/3600;
-                int minutes = (seconds%3600) / 60;
-                int secs = seconds%60;
-
-                // Format the time
-                String time = String.format("%d:%02d:%02d", hours, minutes, secs);
-                tv_timer.setText(time);
-
-                if(running)
-                    seconds++;
-
-                // Keep posting the code to be run after a delay of 1 second
-                handler.postDelayed(this, 1000* 1);
             }
         });
     }
 
-    // Update the GPS
-    private void updateGPS() {
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
-                this);
-
-        // Check to make sure that permission for location is granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            // User provided the permission. So, get the last know location.
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this,
-                    new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Update the GPS GUI
-                            if (location != null) {
-
-                                // Update the mCurrentLocation with the latest location retrieved
-                                mCurrentLocation = location;
-                                //updateGPSUI(mCurrentLocation, mOldLocation);
-
-                            }
-                        }
-                    });
-        }
-
-        else {
-            // Permission not granted yet
-            // Our build version needs to be higher than 23
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        PERMISSIONS_FINE_LOCATION);
-            }
+    // request and set device location permission
+    private void enableLocation() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]
+                            {Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
         }
     }
 
-    // This  method gets triggered after permission has been granted. requestCode is the
-    // number assigned, permissions specify which permission was requested.
+    // This method is called after the request to get user's permission
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch(requestCode) {
-            case PERMISSIONS_FINE_LOCATION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission was granted. Do nothing and carry on
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        // Check if location permissions are granted and if so enable the
+        // location data layer.
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION:
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    enableLocation();
+                    break;
                 }
-
-                else{
-                    Toast.makeText(this, "This app requires permission to be granted" +
-                            "to work properly", Toast.LENGTH_SHORT).show();
-                    // Exit the program
-                    finish();
-                }
-                break;
         }
     }
 
+    // This method will compute the distance between the current and last to the current position
+    // of the runner and update the view with the total distance of the runner in mile
+    public void updateDistance() {
+        double lat1 = oldPosition.latitude;
+        double lng1 = oldPosition.longitude;
 
-    // Update GPS related UI values with the location passed
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void updateGPSUI(Location currentLocation, Location oldLocation) {
+        double lat2 = location.getLatitude();
+        double lng2 = location.getLongitude();
 
-        if(currentLocation != null) {
-            tv_lat.setText("Latitude: " + currentLocation.getLatitude());
-            tv_lon.setText("Longitude: " + currentLocation.getLongitude());
+        distance = distance + SimpleLocation.calculateDistance(lat1, lng1, lat2, lng2);
+        double mile = distance / 1609.344;
+        String mileStr = String.format(Locale.US,"%.2f", mile);
 
-            /************* DISTANCE *************/
-            // Distance Travelled between the old location and current location
-            float distanceMeters;
-            double distanceMiles;
+        distance_textView.setText(mileStr);
+    }
 
-            if(oldLocation != null) {
-                distanceMeters = oldLocation.distanceTo(currentLocation);
+    // This method will retrieve the speed of the runner at each location and calculate the
+    // runner's pace in seconds per mile to update the view
+    public void updateSpeed() {
+        // 1 m/s = 1609.344 seconds/mile
+        double speed = (1609.34/location.getSpeed());
+        int currentPaceInSeconds = (int) speed; // pace in seconds per mile
+
+        int hours = currentPaceInSeconds / 3600;
+        int minutes = (currentPaceInSeconds % 3600) / 60;
+        int secs = currentPaceInSeconds % 60;
+
+        String pace = "";
+        if (hours == 0) {
+            pace = String.format(Locale.US,"%02d:%02d", minutes, secs);
+        } else {
+            pace = "00:00";
+        }
+
+        currentPace_textView.setText(pace);
+    }
+
+    // This method sets up views and the listener to respond to user clicks
+    @SuppressLint("ClickableViewAccessibility")
+    public void setupViews() {
+
+        //TODO set up listeners for map and setting buttons
+        runMapFrameLayout = findViewById(R.id.runMap_fragment);
+        runStatsLinearLayout = findViewById(R.id.stats_LinearLayout);
+
+        start_button = findViewById(R.id.start_button);
+        pause_button = findViewById(R.id.pause_button);
+        end_button = findViewById(R.id.end_button);
+        run_stats_button = findViewById(R.id.run_stats_button);
+        map_button = findViewById(R.id.map_button);
+
+
+        map_button.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.getBackground().setColorFilter(new BlendModeColorFilter(0xe0f47521, BlendMode.SRC_ATOP));
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.getBackground().clearColorFilter();
+                        v.invalidate();
+
+                        runMapFrameLayout.setVisibility(View.VISIBLE);
+                        runStatsLinearLayout.setVisibility(View.INVISIBLE);
+                        break;
+                    }
+                }
+                return false;
             }
+        });
 
-            else
-                distanceMeters = 0;
+        run_stats_button.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.getBackground().setColorFilter(new BlendModeColorFilter(0xe0f47521, BlendMode.SRC_ATOP));
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.getBackground().clearColorFilter();
+                        v.invalidate();
 
-            distanceMiles = meterToMile(distanceMeters);
+                        runMapFrameLayout.setVisibility(View.INVISIBLE);
+                        runStatsLinearLayout.setVisibility(View.VISIBLE);
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
 
-            // If the run is paused, no need to update the mTotalDistanceMile
-            if(isRunPaused)
-                mTotalDistanceMile += 0;
-            else
-                mTotalDistanceMile += distanceMiles;
-
-            //tv_distance.setText("Total Distance: "+ String.valueOf(mTotalDistanceMeter) + " m");
-            tv_distance.setText("Total Distance: "+ mTotalDistanceMile + " miles");
-            tv_distance_format.setText("Total Distance Rounded: " + round(mTotalDistanceMile, 5) + " miles");
-
-
-
-            tv_accuracy.setText("Accuracy: " + currentLocation.getAccuracy());
-
-
-
-            double paceSecMiles = 0;
-            double speedMeterSec = 0;
-
-            /************ SPEED && PACE *************/
-            if(currentLocation.hasSpeed()) {
-                    speedMeterSec = (double)currentLocation.getSpeed();
-                    tv_speed.setText("Speed: " + speedMeterSec + " m/s");
-
-                    // Round the speed down before finding pace
-                    speedMeterSec = round(speedMeterSec, 4);
-                    if(speedMeterSec < 1) {
-                        tv_speed2.setText("Pace: " + 0 + " sec/miles");
+        // Runner wants to start their run
+        start_button.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.getBackground().setColorFilter(new BlendModeColorFilter(0xe0f47521, BlendMode.SRC_ATOP));
+                        v.invalidate();
+                        break;
                     }
 
-                    else {
-                        // Pace is the inverse of speed
-                        paceSecMiles = meterPerSecToSecPerMile(speedMeterSec);
-                        tv_speed2.setText("Pace: " + paceSecMiles + " sec/miles");
+                    case MotionEvent.ACTION_UP: {
+                        v.getBackground().clearColorFilter();
+                        v.invalidate();
+
+                        startTimer(); // start or resume timer
+
+                        start_button.setVisibility(View.INVISIBLE);
+                        end_button.setVisibility(View.INVISIBLE);
+
+                        pause_button.setVisibility(View.VISIBLE);
+                        run_stats_button.setVisibility(View.VISIBLE);
+                        map_button.setVisibility(View.VISIBLE);
+                        break;
                     }
+                }
+                return false;
             }
-            else
-                tv_speed.setText("Pace not available");
+        });
 
+        // The user pauses the run
+        pause_button.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.getBackground().setColorFilter(new BlendModeColorFilter(0xe0f47521, BlendMode.SRC_ATOP));
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.getBackground().clearColorFilter();
+                        v.invalidate();
 
-            /**  FROMATTING PACE **/
-            int hours = (int) paceSecMiles/3600;
-            int minutes = (int)(paceSecMiles%3600) / 60;
-            int secs = (int)paceSecMiles%60;
+                        stopTimer(); // stop or pause the timer
 
-            // Format the pace
-            String pace = String.format("Pace formatted: %d:%02d:%02d", hours, minutes, secs);
-            tv_pace_format.setText(pace);
+                        pause_button.setVisibility(View.INVISIBLE);
+                        run_stats_button.setVisibility(View.INVISIBLE);
+                        map_button.setVisibility(View.INVISIBLE);
 
-
-            //double distance = 0;
-            String locationFetchInfo = "OLD LOCATION: ";
-
-            if(oldLocation!=null) {
-                locationFetchInfo += "(Lat " + oldLocation.getLatitude() + " , Lon " +
-                        oldLocation.getLongitude() + ")";
+                        start_button.setVisibility(View.VISIBLE);
+                        end_button.setVisibility(View.VISIBLE);
+                        break;
+                    }
+                }
+                return false;
             }
+        });
 
-            // Since oldLocation is null, this is the first time fetching
-            else{
-                locationFetchInfo += "None";
-                //tv_distance.setText("Distance: 0.0 m");
+        // End button is pressed
+        end_button.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.getBackground().setColorFilter(new BlendModeColorFilter(0xe0f47521, BlendMode.SRC_ATOP));
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.getBackground().clearColorFilter();
+                        v.invalidate();
+
+                        // At the end of the run, present the user with the choice to save their run
+                        // on Firebase
+                        AlertDialog.Builder builder = new AlertDialog.Builder(RunActivity.this,
+                                android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
+                        builder.setMessage("Save run?")
+                                .setCancelable(false)
+                                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        runMapFrameLayout.setVisibility(View.VISIBLE);
+                                        runStatsLinearLayout.setVisibility(View.INVISIBLE);
+                                        drawUserRoute();
+
+                                        captureRoute();
+                                        goToHomeScreen();
+                                    }
+                                })
+                                .setNegativeButton("Discard", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        goToHomeScreen();
+                                    }
+                                })
+                                .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                        break;
+                    }
+                }
+                return false;
             }
+        });
 
-            String locationRetrievalInfo = locationFetchInfo + "\nNEW LOCATION: " +
-                    "(Lat " + currentLocation.getLatitude() + " , Lon " +
-                    currentLocation.getLongitude() + ")" + "\nLast Update Time: " + mLastUpdateTime;
+        time_textView = findViewById(R.id.timer_text_view);
+        distance_textView = findViewById(R.id.distance_text_view);
+        currentPace_textView = findViewById(R.id.current_pace_text_view);
+        avgPace_textView = findViewById(R.id.avg_pace_text_view);
 
-            tv_old_new_location.setText(locationRetrievalInfo);
+    } // end of setupViews()
+
+    // Sends the running stats of the user to the Firebase
+    public void sendDataToDatabase(String imageUrl) {
+
+        // Distance in miles
+        double mile = distance / 1609.344;
+        String distance = String.format(Locale.US,"%.2f", mile);
+
+        //=====================================================//
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        int secs = seconds % 60;
+
+        String elapseTime;
+        if (hours == 0) {
+            elapseTime = String.format(Locale.US,"%02d:%02d", minutes, secs);
+        } else {
+            elapseTime = String.format(Locale.US,"%d:%02d:%02d", hours, minutes, secs);
         }
 
-        else {
-            tv_lat.setText("Latitude: Not Retrieved yet");
-            tv_lon.setText("Longitude: Not Retrieved yet");
-            tv_speed.setText("Speed: Not Retrieved yet");
-            tv_speed2.setText("Pace: Not Retrieved yet");
-            tv_distance.setText("Total Distance: Not Retrieved yet");
-            tv_pace_format.setText("Not Retrieved yet");
-            tv_distance_format.setText("Not Retrieved yet");
-            tv_old_new_location.setText("Not Retrieved yet");
-            tv_accuracy.setText("Acc Not Retrieved");
+        //=====================================================//
+        // Calculate the average pace of the user
+        int avgPace = (int) (seconds / mile); // avg pace in seconds per mile
+        hours = avgPace / 3600;
+        minutes = (avgPace % 3600) / 60;
+        secs = avgPace % 60;
+
+        String pace;
+        if (hours == 0) {
+            pace = String.format(Locale.US,"%02d:%02d", minutes, secs);
+        } else {
+            pace = "00:00";
         }
+
+        //=====================================================//
+        RunData runData = new RunData(elapseTime, pace, distance, dateTime, imageUrl);
+
+        FirebaseHandler fbHandler = new FirebaseHandler();
+        String uid = fbHandler.getCurrentUser().getUid();
+
+        fbHandler.pushRunData(runData, uid);
+    }
+
+    // Add the user route & style the polyline
+    public void drawUserRoute() {
+
+        // Width of the polyline
+        int polyline_stroke_with_px = 20;
+
+        // Adds a polyline, that traces the positions passed, on the Google Map
+        userPath = map.addPolyline(new PolylineOptions().clickable(true).addAll(positions));
+
+        userPath.setWidth(polyline_stroke_with_px);
+        userPath.setColor(Color.RED);
+        userPath.setJointType(JointType.ROUND);
+    }
+
+    // This method takes a screenshot of the user route and upload it
+    public void captureRoute() {
+        final GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+            @Override
+            public void onSnapshotReady(Bitmap bitmap) {
+                uploadRouteImage(bitmap);
+            }
+        };
+        map.snapshot(callback);
+    }
+
+    public void uploadRouteImage(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        FirebaseHandler fbHandler = new FirebaseHandler();
+        String uid = fbHandler.getCurrentUser().getUid();
+
+        UploadTask uploadTask = fbHandler.pushRouteImage(data, uid);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Toast.makeText(RunActivity.this, "UPLOAD FAIL", Toast.LENGTH_LONG).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                if (taskSnapshot.getMetadata() != null) {
+                    if (taskSnapshot.getMetadata().getReference() != null) {
+                        Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+
+                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String imageUrl = uri.toString();
+                                sendDataToDatabase(imageUrl);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    // Takes the user to the home screen
+    public void goToHomeScreen() {
+        Intent intent = new Intent(RunActivity.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 
-    /************** UNIT CONVERSIONS ****************************/
-    private double meterToMile(double meter) {
-        return meter/ 1609.344;
+    // This method sets up the timer and update the number of timer view with the number of
+    // seconds that has elapsed by properly formatting into HH:MM:SS
+    public void setupTimer() {
+        long maxTime = 43200; // 12 hours max time
+        long intervalSeconds = 1000; // 1 second interval
+        seconds = 0; // elapsed time
+
+        timer = new CountDownTimer(maxTime * 1000, intervalSeconds) {
+            public void onTick(long millisUntilFinished) {
+                seconds++;
+
+                int hours = seconds / 3600;
+                int minutes = (seconds % 3600) / 60;
+                int secs = seconds % 60;
+
+                String time = "";
+                if (hours == 0) {
+                    time = String.format(Locale.US,"%02d:%02d", minutes, secs);
+                } else {
+                    time = String.format(Locale.US,"%d:%02d:%02d", hours, minutes, secs);
+                }
+
+                time_textView.setText(time);
+            }
+
+            @Override
+            public void onFinish() { }
+        };
+    } // end of setupTimer()
+
+    // Starts the timer
+    public void startTimer() {
+        timer.start();
+        isRunning = true;
     }
 
-    private double meterPerSecToSecPerMile(double meterPerSecond) {
-        return 1609.344/ meterPerSecond;
+    // Stops the timer
+    public void stopTimer() {
+        timer.cancel();
+        isRunning = false;
     }
 
-    /*********** ROUNDING DOUBLES *******************/
-    // Simply rounds down to number of places specified
-    private double round (double value, int places) {
-        BigDecimal bd = new BigDecimal(Double.toString(value));
-        bd = bd.setScale(places, RoundingMode.HALF_DOWN);
-        return bd.doubleValue();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // make the device update its location
+        location.beginUpdates();
+    }
+
+    @Override
+    protected void onPause() {
+        // stop location updates
+        location.endUpdates();
+        super.onPause();
+    }
+
+    // This method is called when the map is ready
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        enableLocation();
+
+        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        // Simply move the camera to the current user's location
+        CameraUpdate cameraUpdate = CameraUpdateFactory
+                .newLatLngZoom(currentLocation, INITIAL_ZOOM);
+        map.moveCamera(cameraUpdate);
     }
 }

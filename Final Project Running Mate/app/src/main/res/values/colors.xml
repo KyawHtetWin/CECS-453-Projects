@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#FDFFFF</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#ecaa00</color>
+    <color name="colorPrimaryDark">#ecaa00</color>
+    <color name="colorAccent">#ffda27</color>
+
+    <color name="csulb_gold_primary">#ecaa00</color>
+    <color name="csulb_gold_secondary">#ffda27</color>
+
+    <color name="csulb_dark_primary">#000000</color>
+    <color name="csulb_dark_secondary">#707271</color>
+
+
+
     <color name="blackTextColor">#000</color>
     <color name="ligthBlueTextColor">#365B6F</color>
     <color name="colorLoginPrimaryDark">#FDFFFF</color>
+
+
 </resources>

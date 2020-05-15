@@ -6,15 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
+
 import java.util.List;
 
+@GlideModule
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
     private Context mContext;
@@ -51,9 +54,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 .into(holder.imageView);
 
          */
-        //Toast.makeText(mContext,uploadCurrent.getImageUrl(),Toast.LENGTH_LONG).show();
-        //Glide.with(mContext).load(uploadCurrent.getImageUrl()).placeholder(R.mipmap.ic_launcher)
-          //      .into(holder.imageView);
+        Glide.with(mContext).load(uploadCurrent.getImageUrl()).into(holder.imageView);
     }
 
     // Show as many as in upload list

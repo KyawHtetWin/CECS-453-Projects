@@ -1,3 +1,9 @@
+/*****
+ *  Login Activity allows the user to login in to our app using Firebase Authentication.
+ *  If the user is not already registered, they can register to the app. In case the user forgets
+ *  password, they can also reset it with the link sent to their email.
+ *****/
+
 package com.example.runningmate;
 
 import androidx.annotation.NonNull;
@@ -23,10 +29,14 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
+    // TextView
     EditText editTextEmail, editTextPassword;
     ImageView iv_login;
     TextView tv_signup;
+
+    // A reference to FirebaseAuth
     FirebaseAuth fAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                // Get the email and password
                 String email = editTextEmail.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
 
@@ -72,18 +83,15 @@ public class LoginActivity extends AppCompatActivity {
 
                                 if(task.isSuccessful()) {
                                     // User has logged in successfully
-                                    Toast.makeText(getApplicationContext(), "Logged in Successfully",
-                                            Toast.LENGTH_LONG).show();
-
-                                    startActivity(new Intent(getApplicationContext(), RunActivity.class));
-
+                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                                 }
 
                                 else {
                                     // User login failed. Show appropriate error
-                                    Toast.makeText(getApplicationContext(), "Error - " +
+                                    Toast.makeText(getApplicationContext(), "Error" +
                                             task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
+
                             }
                         }
                 );
@@ -110,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordResetDialog.setMessage("Enter Your Email To Received Reset Link.");
         passwordResetDialog.setView(resetMail);
 
+        // The user wants to reset password
         passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -118,18 +127,18 @@ public class LoginActivity extends AppCompatActivity {
                 fAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplicationContext(), "Reset Link Sent To Your Email.", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Error ! Reset Link is Not Sent" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
             }
         });
 
+        // The user don't want to reset password
         passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

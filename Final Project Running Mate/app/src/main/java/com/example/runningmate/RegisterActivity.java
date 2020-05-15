@@ -1,3 +1,9 @@
+/*****
+ * Register Activity allows the user to register to our application using their email.
+ * If the user provides all the requested fields, they will be added to the Firebase.
+ */
+
+
 package com.example.runningmate;
 
 import androidx.annotation.NonNull;
@@ -15,6 +21,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -76,17 +84,25 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
 
                                 if(task.isSuccessful()) {
-                                    // User added to the Firebase successfully
-                                    Toast.makeText(getApplicationContext(), "You are a Running Mate! - "
-                                            , Toast.LENGTH_LONG).show();
+                                    // User added to the Firebase successful
+                                    // set user display name
+                                    UserProfileChangeRequest update = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(name)
+                                            .build();
 
-                                    startActivity(new Intent(getApplicationContext(), RunActivity.class));
+                                    FirebaseUser user = fAuth.getCurrentUser();
+                                    if (user != null){
+                                        user.updateProfile(update);
+                                    }
+
+                                    // Take the user to the main activity
+                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
 
                                 }
 
                                 else{
                                     // User not added to the Firebase
-                                    Toast.makeText(getApplicationContext(), "Error - " +
+                                    Toast.makeText(getApplicationContext(), "Error" +
                                             task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
 
@@ -100,8 +116,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    // Take the user to the login page
     public void onLoginClick(View v) {
-
         startActivity(new Intent(this, LoginActivity.class));
     }
 }

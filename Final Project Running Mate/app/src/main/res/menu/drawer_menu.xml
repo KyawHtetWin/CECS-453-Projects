@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/menu_profile"
+            android:title="Edit profile" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/menu_exit"
+            android:title="Log out" />
+    </group>
+
+    <item android:title="Support">
+        <menu>
+            <item
+                android:id="@+id/nav_contact"
+                android:icon="@drawable/menu_help"
+                android:title="Contact support" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/menu_about"
+                android:title="About" />
+        </menu>
+    </item>
+
+</menu>
