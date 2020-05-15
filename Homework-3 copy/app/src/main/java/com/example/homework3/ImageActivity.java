@@ -42,16 +42,15 @@ public class ImageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_image);
-        setContentView(R.layout.image_retrieve);
+        setContentView(R.layout.activity_image);
+        //setContentView(R.layout.image_retrieve);
         // The image view to
-        imageView = findViewById(R.id.get_image);
+        //imageView = findViewById(R.id.get_image);
 
-        RetrieveImage();
+        //RetrieveImage();
 
 
-        /*
-        TRYING TO GET RECYCLER VIEW TO WORK
+        //TRYING TO GET RECYCLER VIEW TO WORK
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -85,7 +84,7 @@ public class ImageActivity extends AppCompatActivity {
             }
         });
 
-         */
+
     }
 
     public void RetrieveImage() {

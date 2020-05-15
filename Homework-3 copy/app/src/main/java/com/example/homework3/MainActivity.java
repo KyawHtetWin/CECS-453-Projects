@@ -359,13 +359,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 String downloadUrl = taskSnapshot.getStorage().getDownloadUrl().toString();
                 // Do what you want
-
                 Upload upload = new Upload("Google Map Screenshot", downloadUrl);
                 // Creates a new entry in our database with unique id
                 String uploadId = mDatabaseRef.push().getKey();
                 // And set its data to our upload file
                 mDatabaseRef.child(uploadId).setValue(upload);
-
 
                 // Save the  screenshot
                 Toast.makeText(getApplicationContext(),"Firebase Saved",Toast.LENGTH_LONG).show();
