@@ -164,6 +164,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    // This sets up views and listener to respond to the user
     @SuppressLint("ClickableViewAccessibility")
     public void setUpViews() {
         mapContainer = findViewById(R.id.mapFragment_container);
@@ -176,6 +177,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         drawer = findViewById(R.id.drawer_layout);
 
+        // Takes the user to the Run Activity
         startRunButton.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -202,6 +204,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        // Shows the map to when clicked
         mapButton.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -223,6 +226,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        // Show the activity feed to the user with all the stats about the previous run
         activityFeedButton.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -244,6 +248,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        // Show the navigation bar to the user with their profile information
         profileButton.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -304,12 +309,13 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    // Check if location permissions are granted and if so enable the
+    // location data layer.
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        // Check if location permissions are granted and if so enable the
-        // location data layer.
+
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSION:
                 if (grantResults.length > 0 &&
@@ -347,6 +353,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         return new LatLng(latitude, longitude);
     }
 
+    // Use the Firebase's Recycler View that will fetch user information from Firebase for the
+    // current user
     public void setUpRV() {
         recyclerView= findViewById(R.id.activityFeed_recyclerView);
         linearLayoutManager = new LinearLayoutManager(this);
@@ -394,6 +402,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         recyclerView.setAdapter(adapter);
     }
 
+    // ViewHolder for the Recycler View that displays all information on a single run
     private class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView timeTextView;
@@ -476,7 +485,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Allows the user to log out of the app
     public void logOutPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this,
+                android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
         builder.setMessage("Are you sure you want to log out?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -497,7 +507,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Show them the information where they can contact to get support on the application
     public void contactPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this,
+                android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
         builder.setTitle("Support");
         builder.setMessage("Email: support@runningmate.com");
         AlertDialog alert = builder.create();
@@ -507,7 +518,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Show the information on the version of our application
     public void aboutPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this,
+                android.R.style.Theme_Material_Light_Dialog_NoActionBar_MinWidth);
         builder.setTitle("About");
         builder.setMessage("Running Mate\nVersion 1.0\nDate: May 15th, 2020");
         AlertDialog alert = builder.create();
@@ -527,6 +539,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         adapter.stopListening();
     }
 
+    // Close the navigation drawer if it's open
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {

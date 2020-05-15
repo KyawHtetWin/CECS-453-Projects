@@ -254,6 +254,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         map_button.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
+
                     case MotionEvent.ACTION_DOWN: {
                         v.getBackground().setColorFilter(new BlendModeColorFilter(0xe0f47521, BlendMode.SRC_ATOP));
                         v.invalidate();

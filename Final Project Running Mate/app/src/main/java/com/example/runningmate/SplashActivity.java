@@ -15,7 +15,6 @@ public class SplashActivity extends Activity {
 
     private final int SPLASH_DISPLAY_LENGTH = 1000; // in seconds
 
-
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
