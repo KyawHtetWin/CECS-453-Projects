@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5">
+
+        <LinearLayout
+            android:id="@+id/stats_LinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/timer_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"
+                android:orientation="vertical"
+                android:layout_margin="20dp">
+
+                <TextView
+                    android:id="@+id/timer_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+
+                    android:layout_weight="1"
+
+                    android:textSize="110sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="00:00"
+                    android:textAlignment="center"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TIME"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="20dp"
+                    android:textAlignment="center" />
+
+                <View style="@style/Divider_Horizontal"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/distance_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp">
+
+                <TextView
+                    android:id="@+id/distance_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+
+                    android:layout_weight="1"
+
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="60sp"
+                    android:autoSizeMaxTextSize="120sp"
+                    android:autoSizeStepGranularity="2sp"
+
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="0.00"
+                    android:textAlignment="center"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MILES"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="20dp"
+                    android:textAlignment="center"/>
+
+                <View style="@style/Divider_Horizontal"
+                    android:layout_marginBottom="20sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/pace_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/current_pace_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="55sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:text="00:00"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="CURRENT PACE"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:paddingBottom="10dp"/>
+                </LinearLayout>
+
+                <View style="@style/Divider_Vertical"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"/>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/avg_pace_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="55sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:text="00:00"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="AVG PACE"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:paddingBottom="10dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- MapFragment with lite mode enabled -->
+<!--        <FrameLayout-->
+<!--            android:id="@+id/map_FrameLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:visibility="invisible">-->
+
+<!--            <fragment-->
+<!--                xmlns:map="http://schemas.android.com/apk/res-auto"-->
+<!--                android:name="com.google.android.gms.maps.MapFragment"-->
+<!--                android:id="@+id/map_fragment"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                map:cameraZoom="15"-->
+<!--                map:mapType="normal" />-->
+<!--        </FrameLayout>-->
+
+        <FrameLayout
+            android:id="@+id/runMap_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/csulb_gold_primary"
+        android:layout_weight="1">
+
+        <ImageButton
+            android:id="@+id/pause_button"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+
+
+            android:background="@drawable/pause_button"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageButton
+            android:id="@+id/end_button"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/end_button"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/start_button"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/start_button"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/start_button"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/end_button"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageButton
+            android:id="@+id/map_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/map_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/pause_button"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/run_stats_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/run_menu_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/pause_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:orientation="vertical">-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/timer_linear_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1.5"-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_margin="20dp">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/timer_text_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+
+<!--            android:layout_weight="1"-->
+
+<!--            android:textSize="110sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:text="00:00"-->
+<!--            android:textAlignment="center"/>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="TIME"-->
+<!--            android:textSize="20sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:layout_marginBottom="20dp"-->
+<!--            android:textAlignment="center" />-->
+
+<!--        <View style="@style/Divider_Horizontal"/>-->
+<!--    </LinearLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/distance_linear_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="2"-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_marginStart="20dp"-->
+<!--        android:layout_marginEnd="20dp">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/distance_text_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+
+<!--            android:layout_weight="1"-->
+
+<!--            android:autoSizeTextType="uniform"-->
+<!--            android:autoSizeMinTextSize="60sp"-->
+<!--            android:autoSizeMaxTextSize="120sp"-->
+<!--            android:autoSizeStepGranularity="2sp"-->
+
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:text="0.00"-->
+<!--            android:textAlignment="center"/>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="MILES"-->
+<!--            android:textSize="20sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:layout_marginBottom="20dp"-->
+<!--            android:textAlignment="center"/>-->
+
+<!--        <View style="@style/Divider_Horizontal"-->
+<!--            android:layout_marginBottom="20sp"/>-->
+<!--    </LinearLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/pace_linear_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:orientation="horizontal">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/current_pace_text_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:textSize="55sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textColor="@android:color/black"-->
+<!--                android:text="00:00"-->
+<!--                android:textAlignment="center"/>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="CURRENT PACE"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textAlignment="center"-->
+<!--                android:paddingBottom="10dp"/>-->
+<!--        </LinearLayout>-->
+
+<!--        <View style="@style/Divider_Vertical"-->
+<!--            android:layout_marginStart="2dp"-->
+<!--            android:layout_marginEnd="2dp"/>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/avg_pace_text_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:textSize="55sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textColor="@android:color/black"-->
+<!--                android:text="00:00"-->
+<!--                android:textAlignment="center"/>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="AVG PACE"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textAlignment="center"-->
+<!--                android:paddingBottom="10dp"/>-->
+<!--        </LinearLayout>-->
+
+<!--    </LinearLayout>-->
+
+
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:background="@color/csulb_gold_primary"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_weight="1">-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/pause_button"-->
+<!--            android:layout_width="95dp"-->
+<!--            android:layout_height="95dp"-->
+
+
+<!--            android:background="@drawable/pause_button"-->
+<!--            android:visibility="visible"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/end_button"-->
+<!--            android:layout_width="80dp"-->
+<!--            android:layout_height="80dp"-->
+<!--            android:background="@drawable/end_button"-->
+<!--            android:visibility="invisible"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/start_button"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/start_button"-->
+<!--            android:layout_width="80dp"-->
+<!--            android:layout_height="80dp"-->
+<!--            android:layout_marginEnd="15dp"-->
+<!--            android:background="@drawable/start_button"-->
+<!--            android:visibility="invisible"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/end_button"-->
+<!--            app:layout_constraintHorizontal_chainStyle="packed"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/map_button"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:background="@drawable/map_button"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/pause_button"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/settings_button"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:background="@drawable/settings_button"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/pause_button"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--    <FrameLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:id="@+id/hidden_map_fragment"/>-->
+
+
+
+
+<!--</LinearLayout>-->
+
