@@ -284,6 +284,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    // Gets called when the map is ready
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
