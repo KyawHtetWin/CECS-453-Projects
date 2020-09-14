@@ -23,7 +23,7 @@ You can define the keys for the debug and release targets in src/debug/ and src/
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD25KWfctWVUs_FK3Fb9CN9FS2dCM9J9xw" />
+            android:value="REMOVED KEY" />
 
         <activity android:name=".HomeActivity" />
         <activity android:name=".RunActivity" />
